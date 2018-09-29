@@ -9,8 +9,6 @@
 
 module.exports = {
     type: 'harvester',
-
-
     min: function( ) {return 2;},
     max: function( ) {return 2;},
     min_energy: function() {return 800;},
@@ -23,7 +21,6 @@ module.exports = {
             return undefined;
         }
         // are there any spawns here?
-        
         spawns = _.filter( Game.spawns, (x) => x.pos.roomName == roomName && x.my == true );
         if( spawns.length > 0 ) {
             job = {
@@ -40,7 +37,7 @@ module.exports = {
             rV[ job.job ] = job;
             return rV;
         }
-        return {};
+        return {}; /// no jobs if no spawns
     },
 
     force_convert: function( creep ) {
@@ -70,16 +67,6 @@ module.exports = {
         return common.createBody( bodyTemplate, energy );
     },
 
-    createCreep1: function( spawn, energy, options ) {
-        body = this.createBody( energy, options );
-        var creep_mem = {role:'harvester',working:false,model:'local'};
-        if( options != undefined ) {
-            if( options.route != undefined ) {
-
-            }
-        }
-
-    },
 
     run: function( creep ) {
         common=require('Common');

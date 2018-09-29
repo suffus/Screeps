@@ -8,7 +8,7 @@
  */
 
 module.exports = {
-    
+
     route: [{structure:['5b9964c1c84f904d3ccaf2dc','5b9e98683b50fb23e20a6407'],action:'drain'},{structure:'5ba21d0f678e5b460f94737b',action:'withdraw'},
             {structure:'5b9b76aef2b3a923f3745fd5',action:'withdraw'},{structure:['5b9964c1c84f904d3ccaf2dc','5b9e98683b50fb23e20a6407'],action:'drain'},
             //{structure:'5ba7a7848a5aa7753406ebaf', action:'withdraw'},
@@ -17,7 +17,7 @@ module.exports = {
     {structure:'5ba356f5df27935437f0a421',action:'withdraw'},
     {structure:'5ba7c1a6d102a632169bd815', action:'withdraw'},
     {structure:'5ba29ff651fc9162c67ebb27',action:'withdraw'}],
-    
+
     routes: {
         tankEngine: [{structure:['5b9964c1c84f904d3ccaf2dc','5b9e98683b50fb23e20a6407'],action:'drain'},{structure:'5ba21d0f678e5b460f94737b',action:'withdraw'},
             {structure:'5b9b76aef2b3a923f3745fd5',action:'withdraw'},{structure:['5b9964c1c84f904d3ccaf2dc','5b9e98683b50fb23e20a6407'],action:'drain'},
@@ -31,7 +31,7 @@ module.exports = {
     type: 'energyTrain',
     max: function() {return 4},
     min: function() {return 3},
-    
+
     selectRoute: function( creep ) {
         if( creep.memory.service == undefined ) {
             trains = _.filter( Game.creeps, (x) => x.memory.role == 'energyTrain' );
@@ -41,10 +41,10 @@ module.exports = {
                     num_trains[ t.memory.service ]++;
                 }
             }
-            
-        }  
+
+        }
     },
-    
+
     min_energy: function() {
         return 1600;
     },
@@ -56,17 +56,17 @@ module.exports = {
         return common.createBody( [{part:CARRY,quantity:10},{part:MOVE,quantity:6}], eA);
     },
     run: function ( creep ) {
-        
+
         if( creep.memory.nextStation == undefined ) {
             creep.memory.nextStation = 0;
             creep.memory.direction = 1;
         }
-        
+
         if( creep.carry.energy == creep.carryCapacity && creep.memory.nextStation > 4 && creep.memory.direction == 1 ) {
             creep.memory.direction = -1;
             this.goNextStation( creep );
-        } 
-        
+        }
+
         // First find nearby tombstones etc
         source_dropped = creep.pos.findClosestByPath( FIND_DROPPED_RESOURCES, {
             filter: (r) => r.resourceType == RESOURCE_ENERGY && creep.pos.getRangeTo( r ) <= 5
@@ -74,13 +74,13 @@ module.exports = {
         source_tombstone = creep.pos.findClosestByPath( FIND_TOMBSTONES, {
             filter: (x) => x.store[RESOURCE_ENERGY] > 0 && creep.pos.getRangeTo( x ) <= 5
         } );
-        
+
         if( source_dropped != undefined && creep.carry.energy < creep.carryCapacity ) {
             if( creep.pickup( source_dropped ) == ERR_NOT_IN_RANGE ) {
                 creep.moveTo( source_dropped );
             }
             return;
-        }     
+        }
         if( source_tombstone != undefined && creep.carry.energy < creep.carryCapacity ) {
             if( creep.withdraw( source_tombstone, RESOURCE_ENERGY ) == ERR_NOT_IN_RANGE ){
                 creep.moveTo( source_tombstone );
@@ -132,7 +132,7 @@ module.exports = {
                 if( sT = STRUCTURE_CONTAINER  || sT == STRUCTURE_STORAGE || sT == STRUCTURE_LINK ) {
                     err = creep.withdraw( structure, RESOURCE_ENERGY );
                 }  else if( 0 ) {
-                    err = creep.pickup( structure, RESOURCE_ENERGY ); 
+                    err = creep.pickup( structure, RESOURCE_ENERGY );
                 } else {
                     console.log("***ERRRR NO SOURCE!");
                     err = -1;
@@ -143,7 +143,7 @@ module.exports = {
         }
         if( action == 'drain' && creep.carry.energy > 100 ) {
             err = ERR_BUSY;
-        } 
+        }
         console.log( creep.name + " (train) received " + err + " trying to " + action + " from/to " + structure)
         if( err == -1 ) {
             console.log("Train could not implement action - going to next station")
@@ -153,15 +153,15 @@ module.exports = {
             console.log( "Energy Train tried to transfer but the target was full" )
             err = 0;
         }
-    
+
         if( err != ERR_BUSY ) {
             this.goNextStation( creep );
         } else {
             console.log( "EnergyTrain got " + err + " trying to " + action + " from/to " + structure )
         }
-        
+
     },
-    
+
     goNextStation: function( creep ) {
         var route = this.route;
         if( creep.memory.route != undefined ) {
@@ -187,7 +187,7 @@ module.exports = {
         }
 
     }
-    
-    
+
+
 
 };

@@ -21,7 +21,7 @@ module.exports = {
         //console.log('Candidate = ' + candidates[0]);
         return candidates;
     },
-    
+
     force_convert: function( creep ) {
         var mod = require('DedicatedHarvester');
         var candidate_sources = mod.getTarget( creep.room.name );
@@ -31,7 +31,7 @@ module.exports = {
         creep.memory={role:'dedicated_harvester',home:creep.room.name,source:candidate_sources[0].id, working:false};
         return true;
     },
-    
+
     create_jobs: function( roomName ) {
         room = Game.rooms[roomName];
         if( room == undefined ) {
@@ -41,8 +41,8 @@ module.exports = {
         if( spawns.length == 0 ) {
             return undefined;
         }
-        sources = room.find( FIND_SOURCES, function(x) { 
-                                                ctr = x.pos.findClosestByPath( STRUCTURE_CONTAINER ); 
+        sources = room.find( FIND_SOURCES, function(x) {
+                                                ctr = x.pos.findClosestByPath( STRUCTURE_CONTAINER );
                                                 if( ctr == undefined || x.pos.getRangeTo( ctr ) > 10) {
                                                     return false;
                                                 } else {
@@ -67,7 +67,7 @@ module.exports = {
         }
         return rV;
     },
-    
+
     createBody: function( energy ) {
         var common = require('Common');
         var bodyT = [{part:WORK,quantity:4},{part:CARRY,quantity:2},{part:MOVE,quantity:2}];
@@ -76,21 +76,21 @@ module.exports = {
         }
         return common.createBody( bodyT, energy );
     },
-    
+    ///// THIS IS THE GITHUB VERSION!
     run: function( creep ) {
         common=require('Common');
-        
+
         if( common.checkWorking( creep ) == true ) {
             var containers = _.filter( _.map(Game.structures, (x,y) => x), (x) => (x.structureType == STRUCTURE_CONTAINER) &&
                                                                                     _.sum(x.store) < x.storeCapacity );
-            
+
             var structure = creep.pos.findClosestByPath( FIND_STRUCTURES, {
                 filter: (x) => x.structureType == STRUCTURE_CONTAINER && _.sum( x.store ) < x.storeCapacity
             });
             console.log("Dedi "+creep.name + " transferring energy to " + structure + " of " + containers)
             if( structure != undefined ) {
                 if( creep.transfer( structure, RESOURCE_ENERGY ) == ERR_NOT_IN_RANGE ) {
-                    creep.moveTo( structure );  
+                    creep.moveTo( structure );
                 }
                 return OK;
             } else {
