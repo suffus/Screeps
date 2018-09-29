@@ -9,19 +9,21 @@
 
 module.exports = {
     type: 'harvester',
-    
-    
+
+
     min: function( ) {return 2;},
     max: function( ) {return 2;},
     min_energy: function() {return 800;},
     max_energy: function() {return 800;},
     work_sequence: function() {return ['slacker'];},
-    
+
     create_jobs: function( roomName ) {
         room = Game.rooms[roomName];
         if( room == undefined ) {
             return undefined;
         }
+        // are there any spawns here?
+        
         spawns = _.filter( Game.spawns, (x) => x.pos.roomName == roomName && x.my == true );
         if( spawns.length > 0 ) {
             job = {
@@ -40,7 +42,7 @@ module.exports = {
         }
         return {};
     },
-    
+
     force_convert: function( creep ) {
         for( k in creep.memory ) {
             delete creep.memory.k;
@@ -48,7 +50,7 @@ module.exports = {
         creep.memory.role = 'harvester';
         creep.working = false;
     },
-    
+
     createBody: function( energy, spawn, options ) {
         common = require('Common');
         if( options == undefined && energy > 800 ) {
@@ -67,25 +69,25 @@ module.exports = {
         }
         return common.createBody( bodyTemplate, energy );
     },
-    
+
     createCreep1: function( spawn, energy, options ) {
         body = this.createBody( energy, options );
         var creep_mem = {role:'harvester',working:false,model:'local'};
         if( options != undefined ) {
             if( options.route != undefined ) {
-                
+
             }
         }
-        
+
     },
-    
+
     run: function( creep ) {
         common=require('Common');
-        
+
         if( common.gotoFlag( creep ) == ERR_BUSY ) {
             return;
         }
-     
+
         if( common.checkWorking( creep ) == true ) {
              var structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
                 filter: (s) => (s.structureType == STRUCTURE_SPAWN
@@ -101,11 +103,11 @@ module.exports = {
             }
             if( structure != undefined ) {
                 if( (err = creep.transfer( structure, RESOURCE_ENERGY )) == ERR_NOT_IN_RANGE ) {
-                    creep.moveTo( structure );  
+                    creep.moveTo( structure );
                 } else if( err != 0 ) {
                     console.log('Harvester received '+ err + ' while trying to transfer stuff to ' + scructure)
                 }
-                
+
             } else {
                 spawns = creep.room.find( FIND_STRUCTURES, (x) => x.structureType == STRUCTURE_SPAWN );
                 spawn = spawns[0];
