@@ -12,8 +12,37 @@ module.exports = {
     min: function() {
         return 0;
     },
+
     max: function() {
-        return 1;
+        let harvestRooms = Memory.mines;
+        if( harvestRooms == undefined ) {
+          harvestRooms = [];
+        }
+        return harvestRooms.length;
+    },
+
+    create_jobs: function( room ) {
+        let harvestRooms = Memory.mines;
+        let rV = {};
+        if( harvestRooms != undefined ) {
+          let thisMine = _.filter( harvestRooms, (x) => x.pos.roomName == room );
+          if( thisMine.length > 0 ) {
+            for( mine of thisMine ) {
+              job_nm = this.type + ':' + mine.id;
+              rV[ job_nm ] = {
+                'role' : this.type,
+                'job' : job_nm,
+                min : 0,
+                max : 1,
+                priority: 5,
+                options : {
+                  resource : mine.id
+                }
+              };
+            }
+          }
+        }
+        return rV;
     },
 
     run: function( creep ) {
