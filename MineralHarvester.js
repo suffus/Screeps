@@ -21,7 +21,7 @@ module.exports = {
         return harvestRooms.length;
     },
 
-    create_jobs: function( room ) {
+    create_jobs: function( roomName ) {
         let mines = Memory.mines;
         if( mines == undefined ) {
           mines = [];
@@ -29,8 +29,11 @@ module.exports = {
         let harvestRooms = _.map(mines, (x) => Game.getObjectById( x ));
         let rV = {};
         if( harvestRooms != undefined && harvestRooms.length > 0 ) {
-          let thisMine = _.filter( harvestRooms, (x) => x.pos.roomName == room );
-          if( thisMine.length > 0 ) {
+          let thisMine = _.filter( harvestRooms, (x) => x.pos.roomName == roomName );
+          let room = Game.rooms[roomName];
+          if( thisMine.length > 0 && thisMine[0].mineralAmount > 0 &&  room != undefined && room.find( FIND_MY_STRUCTURES, {
+            filter: (x) => x.structureType == STRUCTURE_EXTRACTOR
+          }).length > 0 ) {
             for( mine of thisMine ) {
               job_nm = this.type + ':' + mine.id;
               rV[ job_nm ] = {
