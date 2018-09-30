@@ -13,15 +13,15 @@ module.exports = {
         return 0;
     },
     max: function() {
-        return 0;
+        return 1;
     },
-    
+
     run: function( creep ) {
         common = require('Common');
         if( common.gotoFlag( creep ) == ERR_BUSY ) {
             return;
         }
-        
+
         if( creep.memory.working == true ) {
             dropped_resource = creep.room.find( FIND_DROPPED_RESOURCES, {
                 filter: (x) => x.resourceType != RESOURCE_ENERGY
@@ -32,7 +32,7 @@ module.exports = {
                     return;
                 }
             }
-            
+
             mines = creep.room.find( FIND_MINERALS );
             if( mines[0] == undefined ) {
                 console.log( "Miner " + creep.name + " has no work to do.");
@@ -97,7 +97,7 @@ module.exports = {
                 }
             }
         }
-        
+
     }
 
 };
