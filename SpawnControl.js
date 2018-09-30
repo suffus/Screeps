@@ -14,14 +14,14 @@ module.exports = {
             Memory.creep_sched = [];
             Memory.sched_ctr = 1;
         }
-        liveCreeps = _.filter(Game.creeps, (x) => true );
+        liveCreeps = _.filter(Game.creeps, (x) => true ); /// convert to array
 
         creeps_by_job = {};
-        for( j in plan ) {
+        for( let j in plan ) {
             creeps_by_job[ j ] = 0;
         }
 
-        for( c of liveCreeps ) {
+        for( let c of liveCreeps ) {
             if( c.ticksToLive > this.zombieTime ) {
                 job = c.memory.job;
                 if( job == undefined ) {
@@ -34,21 +34,21 @@ module.exports = {
             }
         }
 
-        sched_by_job = {};
+        let sched_by_job = {};
         _.map( plan, (x,y) => sched_by_job[y] = 0);
         _.map( Memory.creep_sched, (x) => sched_by_job[x.job] = 0);
         _.map( Memory.creep_sched, (x) => sched_by_job[x.job]++ );
 
-        for( creepJob in plan ) {
-            s = plan[creepJob];
-            s_min = s.min > 0 ? s.min : 1;
-            s_max = s.max > 0 ? s.max : 1;
-            s_job = s.job != undefined ? s.job : s.role;
-            s_options = s.options != undefined ? s.options : {};
-            s_priority = s.priority > 0 ? s.priority : 1;
-            s_spawns = s.spawns;
+        for( let creepJob in plan ) {
+            let s = plan[creepJob];
+            let s_min = s.min > 0 ? s.min : 1;
+            let s_max = s.max > 0 ? s.max : 1;
+            let s_job = s.job != undefined ? s.job : s.role;
+            let s_options = s.options != undefined ? s.options : {};
+            let s_priority = s.priority > 0 ? s.priority : 1;
+            let s_spawns = s.spawns;
 
-            nC = creeps_by_job[ s_job ] + sched_by_job[ s_job ];
+            let nC = creeps_by_job[ s_job ] + sched_by_job[ s_job ];
 
             while( nC < s_max ) {
                 if( nC < s_min ) {
@@ -59,6 +59,7 @@ module.exports = {
                 nC++;
             }
         }
+
         Memory.creep_sched.sort( function( x, y ) {
             let dP = y.priority - x.priority;
             return dP;
@@ -84,25 +85,25 @@ module.exports = {
     },
 
     runSpawn: function( ) {
-        common = require('Common');
-        available_spawns_array = _.filter( Game.spawns, (x) => x.spawning == undefined );
+        var common = require('Common');
+        let available_spawns_array = _.filter( Game.spawns, (x) => x.spawning == undefined );
 
         if( available_spawns_array.length == 0 ) {
             console.log( "No Spawns" );
             return;
         }
 
-        cS = Memory.creep_sched;
+        let cS = Memory.creep_sched;
 
         //console.log( "High pri creeps are " + cS[0].priority)
-        spawnInfo = {};
+        let spawnInfo = {};
         for( let spawn of available_spawns_array ) {
-            extensions = spawn.room.find( FIND_MY_STRUCTURES, {
+            let extensions = spawn.room.find( FIND_MY_STRUCTURES, {
                 filter: (x) => x.structureType == STRUCTURE_EXTENSION
             } );
-            energyAvailable = spawn.energy + _.sum( _.map( extensions, (x) => x.energy ));
-            energyCapacity = spawn.energyCapacity + _.sum( _.map( extensions, (x) => x.energyCapacity  ) );
-            sI = {
+            let energyAvailable = spawn.energy + _.sum( _.map( extensions, (x) => x.energy ));
+            let energyCapacity = spawn.energyCapacity + _.sum( _.map( extensions, (x) => x.energyCapacity  ) );
+            let sI = {
                 energy: energyAvailable,
                 energyCapacity: energyCapacity
             }
@@ -110,10 +111,7 @@ module.exports = {
         }
 
         for( c of cS ) {
-            reserved_spawn = undefined;
-            body  = c.body;
-            energyRequired = common.calculateBodyCost( body );
-            let spawns_available = false;
+            energyRequired = common.calculateBodyCost( c.body );
             for( s_id in spawnInfo ) {
                 s = Game.getObjectById( s_id );
                 energyAvailable = spawnInfo[s_id].energy;
@@ -127,7 +125,6 @@ module.exports = {
                     continue;    ///// NOT THIS ONE
                 }
                 if( c.spawns == undefined || _.filter( c.spawns, (x) => x == s.id).length > 0 ) {
-                    spawns_available = true;
                     // thats handy Harry - shove it in the oven!
                     err = 99;
                     err = s.spawnCreep( c.body, c.role + ':' + c.id, {memory: c.memory} );
@@ -135,24 +132,23 @@ module.exports = {
                     //return
                     if( err == 0 ) {
                         spawnInfo[s_id] = undefined;
-                        reserved_spawn = undefined;
                         cS = _.filter( cS, (x) => x.id != c.id );
                         break;
                     } else {
+                        c.launchFailError = err;
                         if( err == ERR_NOT_ENOUGH_RESOURCES ) {
                             spawnInfo[s_id] = undefined; // reserve it
                             c.reservationTime = Game.time;
                         } else {
-                            console.log( "Spawn attempt failed with error " + err )
-                            c.launchFailError = err;
+                            console.log( "Spawn attempt failed with error " + err );
                         }
                     }
                 } else {
                     console.log( "Spawn not suitable");
-                    spawns_available = true;
                 }
             }
-            if( spawns_available == false ) {
+            if( Object.values( spawnInfo ).length == 0 ) {
+                /// no more spawns available
                 break;
             }
         }
