@@ -68,8 +68,13 @@ module.exports = {
                     return;
                 }
             }
-
-            mines = creep.room.find( FIND_MINERALS );
+            let mines = [];
+            if( creep.memory.resource != undefined ) {
+              mines = [ Game.getObjectById( creep.memory.resource ) ];
+            } else {
+              mines = creep.room.find( FIND_MINERALS );
+            }
+            
             if( mines[0] == undefined ) {
                 console.log( "Miner " + creep.name + " has no work to do.");
                 creep.memory.status = "onthebrew";
