@@ -22,9 +22,13 @@ module.exports = {
     },
 
     create_jobs: function( room ) {
-        let harvestRooms = Memory.mines;
+        let mines = Memory.mines;
+        if( mines == undefined ) {
+          mines = [];
+        }
+        let harvestRooms = _.map(mines, (x) => Game.getObjectById( x ));
         let rV = {};
-        if( harvestRooms != undefined ) {
+        if( harvestRooms != undefined && harvestRooms.length > 0 ) {
           let thisMine = _.filter( harvestRooms, (x) => x.pos.roomName == room );
           if( thisMine.length > 0 ) {
             for( mine of thisMine ) {
