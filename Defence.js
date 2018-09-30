@@ -16,6 +16,7 @@ module.exports = {
             console.log("**** NO ROOM " + roomName + " FOUND IN " + this.name)
             return;
         }
+        //// LOCAL ONLY NOT GITHUB
         var hostiles = room.find(FIND_HOSTILE_CREEPS);
         if(hostiles.length > 0) {
             var username = hostiles[0].owner.username;
@@ -36,7 +37,7 @@ module.exports = {
         hostiles.forEach( (x) => Memory.hostiles.push(x.id));
     },
     beforeRoom: function( ) {
-        Memory.hostiles = [];  
+        Memory.hostiles = [];
         if( Memory.defcon == undefined ) {
             Memory.defcon = 0;
         }
@@ -63,7 +64,7 @@ module.exports = {
                 }
             }
             if( soldierRooms.length > 0 ) {
-                
+
                 var n = 0;
                 for( soldier of soldiers ) {
                     flag = soldierRooms[n]

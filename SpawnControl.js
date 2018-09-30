@@ -36,12 +36,8 @@ module.exports = {
 
         sched_by_job = {};
         _.map( plan, (x,y) => sched_by_job[y] = 0);
-        for( sched of Memory.creep_sched ) {
-            if( sched_by_job[sched.job] == undefined ) {
-                sched_by_job[sched.job] = 0;
-            }
-            sched_by_job[sched.job]++;
-        }
+        _.map( Memory.creep_sched, (x) => sched_by_job[x.job] = 0);
+        _.map( Memory.creep_sched, (x) => sched_by_job[x.job]++ );
 
         for( creepJob in plan ) {
             s = plan[creepJob];
@@ -52,9 +48,8 @@ module.exports = {
             s_priority = s.priority > 0 ? s.priority : 1;
             s_spawns = s.spawns;
 
-            nC = creeps_by_job[ s_job ];// + sched_by_job[ s_job ];
+            nC = creeps_by_job[ s_job ] + sched_by_job[ s_job ];
 
-            s['current_job'] = s_job;
             while( nC < s_max ) {
                 if( nC < s_min ) {
                     this.scheduleCreep( s.role, s.body, s_job, s_options, s_priority, s_spawns)
@@ -162,9 +157,5 @@ module.exports = {
             }
         }
         Memory.creep_sched = cS;
-    },
-
-    spawnOrReserve: function( creep_sched ) {
-
     }
 };
