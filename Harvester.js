@@ -88,6 +88,9 @@ module.exports = {
                 structure = creep.pos.findClosestByPath( FIND_STRUCTURES, {
                     filter: (s) => s.structureType == STRUCTURE_STORAGE
                 });
+                creep.memory.status = 'storing';
+            } else {
+              creep.memory.status = 'stoking';
             }
             if( structure != undefined ) {
                 if( (err = creep.transfer( structure, RESOURCE_ENERGY )) == ERR_NOT_IN_RANGE ) {
@@ -95,11 +98,13 @@ module.exports = {
                 } else if( err != 0 ) {
                     console.log('Harvester received '+ err + ' while trying to transfer stuff to ' + scructure)
                 }
-
             } else {
-                spawns = creep.room.find( FIND_STRUCTURES, (x) => x.structureType == STRUCTURE_SPAWN );
+                spawns = creep.room.find( FIND_MY_STRUCTURES, (x) => x.structureType == STRUCTURE_SPAWN );
                 spawn = spawns[0];
-                creep.moveTo( spawn );
+                if( creep.pos.getRangeTo( spawn ) > 2 ) {
+                    creep.moveTo( spawn );
+                }
+                return;
             }
         } else {
             if( creep.pos.roomName != creep.memory.room ) {
@@ -112,8 +117,8 @@ module.exports = {
                 creep.memory.working = true;
                 return;
             }
-            
-            common.fillHerUp( creep, undefined, undefined, (x) => common.isInRegion( x.pos, 'spawnRegion' ) );
+            common.fillHerUp( creep, undefined, undefined, (x) => common.isInRegion( x.pos, 'spawnRegion' ) &&
+                                                                  !(creep.memory.status == "storing" && x.structureType == STRUCTURE_STORAGE));
         }
     }
 };
