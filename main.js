@@ -18,12 +18,12 @@ module.exports = {
         this.room_controllers.push( controller );
     },
 
-    defCreepMods = ['DedicatedHarvester', 'Harvester', 'Defender',
+    defCreepMods: ['DedicatedHarvester', 'Harvester', 'Defender',
                   'RemoteHarvester', 'Healer', 'EnergyTrain',
                   'Claimer', 'Builder', 'Repairer', 'TopUp',
                   'Brickie', 'MineralHarvester'],
 
-    defRoomMods = [ 'Link', 'Defence', 'StructurePlanner'],
+    defRoomMods: [ 'Link', 'Defence', 'StructurePlanner'],
 
     loop: function() {
         this.creep_controllers = {};
