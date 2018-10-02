@@ -84,6 +84,13 @@ module.exports = {
             workforce: {
                 remoteHarvester:1
             }
+        },
+        'W14S12': {
+            flag: 'Flag8',
+            defenceStrategy: 'soldier',
+            workforce: {
+              remoteHarvester: 2
+            }
         }
     },
 
@@ -311,7 +318,7 @@ module.exports = {
             source_storage = undefined;
             if( Memory.useStorage > 0 && creep.memory.role == 'harvester') {
                 source_storage = creep.pos.findClosestByPath( FIND_STRUCTURES, {
-                    filter: (x) => x.structureType == STRUCTURE_STORAGE && x.store.energy > 0 
+                    filter: (x) => x.structureType == STRUCTURE_STORAGE && x.store.energy > 0
                 });
             };
             sources = _.filter( [source_container,source_source,source_dropped,source_tombstone,source_link], function(x) {return x!=undefined;})
