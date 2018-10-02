@@ -9,14 +9,15 @@
 
 module.exports = {
 
-    route: [{structure:['5b9964c1c84f904d3ccaf2dc','5b9e98683b50fb23e20a6407'],action:'drain'},{structure:'5ba21d0f678e5b460f94737b',action:'withdraw'},
-            {structure:'5b9b76aef2b3a923f3745fd5',action:'withdraw'},{structure:['5b9964c1c84f904d3ccaf2dc','5b9e98683b50fb23e20a6407'],action:'drain'},
-            //{structure:'5ba7a7848a5aa7753406ebaf', action:'withdraw'},
-            {structure:'5b97ea084fe61b156b29b1d6',action:'deposit'},
-    {structure:'5b994a6326ecb104baa0fdb6',action:'deposit'},{structure:'5ba1ec7126ecb104baa451e0',action:'withdraw'},
-    {structure:'5ba356f5df27935437f0a421',action:'withdraw'},
-    {structure:'5ba7c1a6d102a632169bd815', action:'withdraw'},
-    {structure:'5ba29ff651fc9162c67ebb27',action:'withdraw'}],
+    route: [
+      {structure:['5b9964c1c84f904d3ccaf2dc','5b9e98683b50fb23e20a6407'],action:'drain'}, // LINKS W13S12
+      {structure:'5ba21d0f678e5b460f94737b',action:'withdraw'}, // LINK W12S12
+      {structure:'5b97ea084fe61b156b29b1d6',action:'deposit'}, // TOWER
+      {structure:'5b994a6326ecb104baa0fdb6',action:'deposit'}, // CONTAINER
+      {structure:'5ba1ec7126ecb104baa451e0',action:'withdraw'}, // CONTAINER W12S13
+      {structure:'5ba7c1a6d102a632169bd815', action:'withdraw'}, // CONTAINER W11S13
+      {structure:'5ba29ff651fc9162c67ebb27',action:'withdraw'} // CONTAINER W11S13
+    ],
 
     routes: {
         tankEngine: [{structure:['5b9964c1c84f904d3ccaf2dc','5b9e98683b50fb23e20a6407'],action:'drain'},{structure:'5ba21d0f678e5b460f94737b',action:'withdraw'},
