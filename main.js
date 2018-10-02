@@ -1,10 +1,10 @@
 
 
 module.exports = {
-    
+
     creep_controllers: {},
     room_controllers: [],
-    
+
     registerController: function( name ) {
         var controller = require( name );
         if( controller.type != undefined ) {
@@ -12,38 +12,35 @@ module.exports = {
         }
         return controller;
     },
-    
+
     registerRoomController: function( name ) {
         var controller = require(name);
         this.room_controllers.push( controller );
     },
-    
+
+    defCreepMods = ['DedicatedHarvester', 'Harvester', 'Defender',
+                  'RemoteHarvester', 'Healer', 'EnergyTrain',
+                  'Claimer', 'Builder', 'Repairer', 'TopUp',
+                  'Brickie', 'MineralHarvester'],
+
+    defRoomMods = [ 'Link', 'Defence', 'StructurePlanner'],
+
     loop: function() {
         this.creep_controllers = {};
         this.room_controllers = [];
         var common = require('Common');
 
-        var dedicatedHarvester = this.registerController('DedicatedHarvester');
-        var harvesterRole = this.registerController('Harvester');
-        var remoteHarvester = this.registerController('RemoteHarvester');
-        var defender = this.registerController('Defender');
-        var healer = this.registerController( 'Healer');
-        this.registerController( 'EnergyTrain' )
-        var claimer = this.registerController( 'Claimer' );
-        var builderRole = this.registerController('Builder');
-        var repairerRole = this.registerController('Repairer');
-        var topUpRole = this.registerController('TopUp');
-        var brickieRole = this.registerController('Brickie');
-        var mineralRole = this.registerController('MineralHarvester');
-        //var invalidRole = this.registerController( 'Invalid' );
-        
-        var linkControl = this.registerRoomController('Link');
-        var defenceControl = this.registerRoomController('Defence');
-        var structurePlanner = this.registerRoomController('StructurePlanner');
-        
+        for( let mod of this.defCreepMods ) {
+          this.registerController( mod );
+        }
+
+        for( let mod of this.defRoomMods ) {
+          this.registerRoomController( mod );
+        }
+
         var spawnControl = require('SpawnControl');
         var workerControl = require( 'WorkforceManager');
-        
+
         thePlan = undefined;
         if( Memory.jobPlan == undefined || ((Game.time % 17) == 3) || Memory.defcon > 0  ) {
             thePlan = workerControl.create_plan( this.creep_controllers );
@@ -51,7 +48,7 @@ module.exports = {
             Memory.creep_sched = [];
             spawnControl.schedulePlan( thePlan );
         }
-        
+
         var creep_controllers = this.creep_controllers;
         for (let name in Memory.creeps) {
             // and checking if the creep is still alive
@@ -60,30 +57,30 @@ module.exports = {
                 delete Memory.creeps[name];
             }
         }
-        
+
         console.log("Running room "+Game.spawns['Spawn1'].room.name+" at time " + Game.time);
         i=0;
-        
+
         for( rc of this.room_controllers ) {
             if( rc.beforeRoom != undefined ) {
                 rc.beforeRoom();
             }
         }
-        
+
         for( room in common.roomInfo ) {
             for( rc of this.room_controllers ) {
                 //console.log('Runnin room ' + room + " with " +rc.name+" "+i);
                 rc.runRoom( room );
             }
         }
-        
+
         for( rc of this.room_controllers ) {
             if( rc.afterRoom != undefined ) {
                 rc.afterRoom();
             }
         }
 
-        
+
         ///// main creep execution loop
         for( let name in Game.creeps ) {
             var creep = Game.creeps[name];
@@ -94,10 +91,10 @@ module.exports = {
                 console.log("No controller for "+creep.memory.role+", do not expect creep " + creep.name + " to do much!");
             }
         }
-        
+
         spawnControl.runSpawn();
-        
-        
+
+
         if( (Game.time % 383) == 0 ) {
             if( (Game.time % 3) == 0  ) {
                 common.roleGotoFlag( 'upgrader', 1, 'Flag2')
