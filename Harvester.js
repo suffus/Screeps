@@ -117,8 +117,11 @@ module.exports = {
                 creep.memory.working = true;
                 return;
             }
-            common.fillHerUp( creep, undefined, undefined, ((x) => common.isInRegion( x.pos, 'spawnRegion' ) &&
+            err = common.fillHerUp( creep, undefined, undefined, ((x) => common.isInRegion( x.pos, 'spawnRegion' ) &&
                                                                   !(creep.memory.status == "storing" && x.structureType == STRUCTURE_STORAGE)));
+            if( err = ERR_NOT_ENOUGH_RESOURCES ) {
+              creep.memory.working = true;
+            }
         }
     }
 };

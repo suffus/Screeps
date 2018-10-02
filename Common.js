@@ -364,9 +364,9 @@ module.exports = {
             source = Game.getObjectById( creep.memory.allocatedSource );
             if( source != undefined ) {
                 creep.moveTo( source );
-                return ERR_NOT_FOUND;
+                return ERR_NOT_ENOUGH_RESOURCES;
             } else {
-                return ERR_NOT_FOUND;
+                return ERR_NOT_ENOUGH_RESOURCES;
             }
         }
     },
