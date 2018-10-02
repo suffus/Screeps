@@ -281,7 +281,7 @@ module.exports = {
             }
             this.setSource( creep, source );
         }
-        var source_container, source_source, source_dropped;
+        var source_container, source_source, source_dropped, source_tombstone, source_link, source_storage;
         if( source == undefined ) {
             source_container = creep.pos.findClosestByPath(FIND_STRUCTURES, {
                 filter: function(x) {
@@ -290,7 +290,7 @@ module.exports = {
                     }
             });
             if( (creep.memory.role != 'harvester' && creep.memory.role != 'upgrader') && creep.pos.roomName == this.home) {
-                source_container = undefined;
+              //  source_container = undefined;
             }
 
             if( creep.memory.role != 'harvester') {

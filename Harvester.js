@@ -33,7 +33,7 @@ module.exports = {
                 scaleable: false,
                 body: [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE],
                 priority: 99
-            }
+            };
             rV = {};
             rV[ job.job ] = job;
             return rV;
