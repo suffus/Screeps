@@ -29,11 +29,11 @@ module.exports = {
             return;
         }
 
-        if( common.checkWorking(creep ) == true ) {
+        if( common.checkWorking( creep ) == true ) {
             let constructionSite;
-            if( creep.memory.current_site == undefined ||
-                ((Game.time % 7) == 6) ||
-                (constructionSite = Game.getObjectById( creep.memory.current_site)) == undefined ) {
+            if( (creep.memory.current_site == undefined) ||
+                (constructionSite = Game.getObjectById( creep.memory.current_site )) == undefined ||
+                ((Game.time % 7) == 6) ) {
                   let cS = _.map(Game.constructionSites, (x,y) => x);
                   let constructionSite = creep.pos.findClosestByPath( cS );
 
