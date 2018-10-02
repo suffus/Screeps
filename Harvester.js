@@ -117,10 +117,15 @@ module.exports = {
                 creep.memory.working = true;
                 return;
             }
-            err = common.fillHerUp( creep, undefined, undefined, ((x) => common.isInRegion( x.pos, 'spawnRegion' ) &&
-                                                                  !(creep.memory.status == "storing" && x.structureType == STRUCTURE_STORAGE)));
+            err = common.fillHerUp( creep, undefined, undefined, function(x) {
+                    return common.isInRegion( x.pos, 'spawnRegion' ) &&
+                          !((creep.memory.status == "storing") && (x.structureType == STRUCTURE_STORAGE)
+              });
             if( err = ERR_NOT_ENOUGH_RESOURCES ) {
+              console.log( "NO SOURCES FOR HARVESTER " + creep.name )
               creep.memory.working = true;
+            } else {
+              console.log( "FILLHERUP RETURNED " + err + " FOR HARVESTER " + creep.name);
             }
         }
     }
