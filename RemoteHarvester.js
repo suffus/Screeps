@@ -33,7 +33,7 @@ module.exports = {
                 job: this.type + ":" + roomName,
                 min: common.roomInfo[roomName].workforce.remoteHarvester,
                 max: common.roomInfo[roomName].workforce.remoteHarvester,
-                options: {target: roomName},
+                options: {target: roomName, working:true},
                 priority: 50,
                 body: this.createBody( this.max_energy() )
             };

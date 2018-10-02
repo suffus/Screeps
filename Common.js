@@ -40,7 +40,7 @@ module.exports = {
         'W12S12':{
             flag:'Flag2',
             workforce: {
-                'remoteHarvester':2,
+                //'remoteHarvester':2,
                 'upgrader':1,
                 'repairer':'calculate',
                 'builder':'calculate'
@@ -232,6 +232,9 @@ module.exports = {
 
     
     checkWorking: function( creep ) {
+        if( creep.memory.working == undefined ) {
+            creep.memory.working = true;
+        }
         
         if (creep.memory.working == true && creep.carry.energy == 0) {
             // switch state

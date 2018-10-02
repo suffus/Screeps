@@ -10,7 +10,7 @@
 module.exports = {
     type: 'builder',
     min: function() {return 0;},
-    max: function() {reqE = _.sum( Game.constructionSites, (x) => x.progressTotal - x.progress ); nB = Math.floor( reqE/50000 ); if( nB > 4 ) {return 4;} else {return (nB == 0 ? (reqE > 0 ? 1 : 0) : nB) }},
+    max: function() {reqE = _.sum( Game.constructionSites, (x) => x.progressTotal - x.progress ); nB = Math.ceil( reqE/50000 ); if( nB > 4 ) {return 4;} else {return (nB == 0 ? (reqE > 0 ? 1 : 0) : nB) }},
     max_energy: function() {return 1200;},
     work_sequence: function() {return ['upgrader'];},
 

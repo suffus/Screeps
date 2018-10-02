@@ -30,7 +30,7 @@ module.exports = {
     },
     type: 'energyTrain',
     max: function() {return 4},
-    min: function() {return 3},
+    min: function() {return 4},
 
     selectRoute: function( creep ) {
         if( creep.memory.service == undefined ) {

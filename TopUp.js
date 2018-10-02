@@ -61,7 +61,13 @@ module.exports = {
             return;
         }  
         if( common.checkWorking( creep ) == true ) {
-            if( creep.room.controller == undefined || !creep.room.controller.my ) {
+            if( creep.room.controller == undefined || creep.room.controller.my==false ) {
+                return;
+            }
+            
+            if( creep.room.controller.id != creep.memory.controller ) {
+                let target = Game.getObjectById( creep.memory.controller );
+                creep.moveTo( target );
                 return;
             }
             

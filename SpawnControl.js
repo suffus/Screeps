@@ -22,7 +22,7 @@ module.exports = {
         }
 
         for( let c of liveCreeps ) {
-            if( c.ticksToLive > this.zombieTime ) {
+            if( c.spawning == true || c.ticksToLive > this.zombieTime ) {
                 job = c.memory.job;
                 if( job == undefined ) {
                     job = c.memory.role;
@@ -114,6 +114,10 @@ module.exports = {
             energyRequired = common.calculateBodyCost( c.body );
             for( s_id in spawnInfo ) {
                 s = Game.getObjectById( s_id );
+                if( spawnInfo[s_id] == undefined ) {
+                    console.log( "No Spawn " + s_id);
+                    continue;
+                } 
                 energyAvailable = spawnInfo[s_id].energy;
                 energyCapacity = spawnInfo[s_id].energyCapacity;
                 spawns_available = true;

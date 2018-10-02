@@ -29,6 +29,7 @@ module.exports = {
                 min: 2,
                 max: 2,
                 spawns: _.map( spawns, (x) => x.id ),
+                options: {room:roomName},
                 scaleable: false,
                 body: [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE],
                 priority: 99
@@ -101,10 +102,17 @@ module.exports = {
                 creep.moveTo( spawn );
             }
         } else {
+            if( creep.pos.roomName != creep.memory.room ) {
+                if( creep.memory.room != undefined ) {
+                    creep.moveTo( common.roomInfo[creep.memory.room].flag );
+                    return;
+                }
+            }
             if( creep.carry.energy == creep.carryCapacity) {
                 creep.memory.working = true;
                 return;
             }
+            
             common.fillHerUp( creep, undefined, undefined, (x) => common.isInRegion( x.pos, 'spawnRegion' ) );
         }
     }

@@ -22,6 +22,7 @@ module.exports = {
     },
 
     create_jobs: function( roomName ) {
+        common = require('Common');
         let mines = Memory.mines;
         if( mines == undefined ) {
           mines = [];
@@ -41,6 +42,7 @@ module.exports = {
                 'job' : job_nm,
                 min : 0,
                 max : 1,
+                body: common.createWorkerBody(1300),
                 priority: 5,
                 options : {
                   resource : mine.id
