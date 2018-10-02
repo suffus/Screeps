@@ -9,16 +9,16 @@
 
 module.exports = {
 
-   
+
     roomFlags: {'W13S12':'Flag1', 'W12S12':'Flag2', 'W12S13':'Flag3', 'W12S13':'Flag5'},
     remoteRooms: ['W12S12','W12S13','W11S13'],
     rooms: ['W13S12','W12S12','W12S13','W11S13', 'W11S12'],
-    
+
     home: 'W13S12',
     roomInfo: {
         'W13S12':{
             flag: 'Flag1',
-            
+
             workforce: {
                 'dedicated_harvester':2,
                 'harvester':2,
@@ -86,8 +86,8 @@ module.exports = {
             }
         }
     },
-    
-    
+
+
     createWorkerBody: function( energyAvailable ) {
         if( energyAvailable == 300 )  {
             return [WORK,WORK,CARRY,MOVE];
@@ -98,12 +98,12 @@ module.exports = {
         bP = [{part:WORK,quantity:5},{part:CARRY,quantity:4},{part:MOVE,quantity:4}];
         return this.createBody( bP, energyAvailable );
     },
-    
+
     bodyPartCost : {
         'work':100,'carry':50,'move':50,'attack':80,'ranged_attack':150,'tough':10,'heal':250,'claim':600
     },
 
-    
+
     createBody: function( bodyPrototype, energyAvailable ) {
         bodyPartCost = {
             'work':100,'carry':50,'move':50,'attack':80,'ranged_attack':150,'tough':10,'heal':250,'claim':600
@@ -129,20 +129,20 @@ module.exports = {
         bS = body.join();
         console.log("Body = "+ bS+", cost = "+bCost);
         return body;
-        
+
     },
-    
+
     calculateBodyCost: function( body ) {
         return _.sum( body, (x) => this.bodyPartCost[x])
     },
-    
+
     creepsGotoFlag: function( creeps, flag ) {
         for( let c of creeps ) {
             c.memory.targetFlag = flag;
         }
         return OK;
     },
-    
+
     roleGotoFlag: function( role, num, flag ) {
         if( !(num>0) ) {
             return ERR_INVALID_ARGS;
@@ -158,22 +158,22 @@ module.exports = {
             }
         } else {
             return ERR_NOT_ENOUGH_RESOURCES;
-        } 
+        }
         _.map( assigned_creeps, (x) => x.memory.targetFlag = flag );
         _.map( assigned_creeps, (x) => x.memory.sourceTarget = undefined );
         return OK;
-        
+
     },
-    
+
     gotoFlag: function( creep, strict ) {
-        
+
         if( creep.room.name != this.home) {
             if( Memory.defcon > 0 ) {
                 creep.moveTo( Game.flags.Flag1 );
                 return ERR_BUSY;
             }
         }
-        
+
         if( creep.memory.targetFlag != undefined ) {
            console.log(creep.name + " has a target Flag");
            creep.memory.sourceTarget = undefined
@@ -213,7 +213,7 @@ module.exports = {
        }
        return OK;
     },
-    
+
     getOppositeDirection: function( dir ) {
         map = {
                         TOP:BOTTOM,
@@ -227,18 +227,18 @@ module.exports = {
                         BOTTOM:TOP
         };
         return map[dir];
-        
+
     },
 
-    
+
     checkWorking: function( creep ) {
         if( creep.memory.working == undefined ) {
             creep.memory.working = true;
         }
-        
+
         if (creep.memory.working == true && creep.carry.energy == 0) {
             // switch state
-            
+
             creep.memory.working = false;
         }
         // if creep is harvesting energy but is full
@@ -250,7 +250,7 @@ module.exports = {
         }
         return creep.memory.working;
     },
-    
+
     setSource: function( creep, src ) {
         sourceID = undefined;
         if( src != undefined ) {
@@ -258,7 +258,7 @@ module.exports = {
         }
         creep.memory.sourceTarget = sourceID;
     },
-    
+
     fillHerUp: function( creep, sourceID_in, roomName, sourceFilter ) {
         if( creep.carry.energy == creep.carryCapacity ) {
             return ERR_FULL;
@@ -267,7 +267,7 @@ module.exports = {
         if( sourceID == undefined ) {
             sourceID = creep.memory.sourceTarget;
         }
-        
+
         var source = undefined;
         if( sourceID != undefined ) {
             source = Game.getObjectById( sourceID );
@@ -292,7 +292,7 @@ module.exports = {
             if( (creep.memory.role != 'harvester' && creep.memory.role != 'upgrader') && creep.pos.roomName == this.home) {
                 source_container = undefined;
             }
-            
+
             if( creep.memory.role != 'harvester') {
                 source_source = creep.pos.findClosestByPath( FIND_SOURCES_ACTIVE );
             }
@@ -303,7 +303,7 @@ module.exports = {
             source_tombstone = creep.pos.findClosestByPath( FIND_TOMBSTONES, {
                 filter: (x) => x.store[RESOURCE_ENERGY] > 0
             } );
-            
+
             source_link = creep.pos.findClosestByPath( FIND_STRUCTURES, {
                 filter: (x) => x.structureType == STRUCTURE_LINK &&
                                 x.energy > 0
@@ -311,7 +311,7 @@ module.exports = {
             source_storage = undefined;
             if( Memory.useStorage > 0 && creep.memory.role == 'harvester') {
                 source_storage = creep.pos.findClosestByPath( FIND_STRUCTURES, {
-                    filter: (x) => x.structureType == STRUCTURE_STORAGE && x.store.energy > 0
+                    filter: (x) => x.structureType == STRUCTURE_STORAGE && x.store.energy > 0 && sourceFilter( x ) == true
                 });
             };
             sources = _.filter( [source_container,source_source,source_dropped,source_tombstone,source_link], function(x) {return x!=undefined;})
@@ -321,7 +321,7 @@ module.exports = {
             source = creep.pos.findClosestByPath( sources );
             if( (source == undefined || creep.pos.getRangeTo(source) > 20)  && source_storage != undefined ) {
                 source = source_storage;
-            } 
+            }
         } else {
             console.log("Getting Source "+source);
             if( source.store != undefined ) {
@@ -340,7 +340,7 @@ module.exports = {
             } else if( source == source_container || source == source_tombstone || source == source_storage || source == source_link ) {
                 err = creep.withdraw( source, RESOURCE_ENERGY );
             }  else if( source == source_dropped ) {
-                err = creep.pickup( source, RESOURCE_ENERGY ); 
+                err = creep.pickup( source, RESOURCE_ENERGY );
             } else {
                 console.log("***ERRRR NO SOURCE!");
                 err = ERR_NOT_FOUND;
@@ -371,7 +371,7 @@ module.exports = {
         }
     },
 
-    
+
     buildAndRepairRemote: function( role, r ) {
         var remotes = [];
         for( rm in this.roomInfo ) {
@@ -379,14 +379,14 @@ module.exports = {
                 remotes.push( rm );
             }
         }
-        
+
         if( r == undefined ) {
             r = remotes[ Math.floor( Math.random() * remotes.length )];
-            
+
         }
         var room = Game.rooms[r];
         flag = this.roomInfo[r].flag;
-        
+
         if( role == undefined && room != undefined && room.controller != undefined && room.controller.my == true && (Game.time % 2) == 0 ) {
             role = 'upgrader';
         } else {
@@ -404,7 +404,7 @@ module.exports = {
             console.log( "**** Remote repairing - no creeps available")
         }
     },
-    
+
     isInRegion: function( pos, r ) {
         rInfo = this.roomInfo[pos.roomName].regions;
         if( rInfo == undefined ) {
@@ -423,7 +423,7 @@ module.exports = {
         }
         return false;
     },
-    
+
     listCreeps: function( ) {
         for( let c in Game.creeps ) {
             creep = Game.creeps[c];
@@ -431,5 +431,5 @@ module.exports = {
         }
     }
 
-    
+
 };
