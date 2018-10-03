@@ -120,7 +120,7 @@ module.exports = {
             }
             err = common.fillHerUp( creep, undefined, undefined, function(x) {
                     return common.isInRegion( x.pos, 'spawnRegion' ) &&
-                          !((creep.memory.status == "storing") && (x.structureType == STRUCTURE_STORAGE));
+                            x.pos.roomName == creep.memory.room );
               });
             if( err = ERR_NOT_ENOUGH_RESOURCES ) {
               console.log( "NO SOURCES FOR HARVESTER " + creep.name );
