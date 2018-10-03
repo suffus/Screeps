@@ -98,6 +98,9 @@ module.exports = {
                 var source_source = creep.pos.findClosestByPath( FIND_SOURCES, {
                     filter: (x) => x.pos.roomName == creep.memory.target && x.energy > 0
                 } );
+                var source_noenergy = creep.pos.findClosestByPath( FIND_SOURCES, {
+                    filter: (x) => x.pos.roomName == creep.memory.target && x.energy == 0
+                } );
                 var source_dropped = creep.pos.findClosestByPath( FIND_DROPPED_RESOURCES, {
                     filter: (x) => x.resourceType == RESOURCE_ENERGY && x.pos.roomName == creep.memory.target
                 } );
@@ -105,6 +108,10 @@ module.exports = {
                   filter: (x) => x.pos.roomName == creep.memory.target && x.store[ RESOURCE_ENERGY ] > 0
                 });
                 var source = creep.pos.findClosestByPath( _.filter([source_source, source_dropped, source_tombstone], (x) => x != undefined));
+                if( source == undefined ) {
+                  source = source_noenergy;
+                  source_source = source_noenergy;
+                }
                 if( source == source_source ) {
                     err = creep.harvest(source);
                 } else if( source == source_dropped ) {
