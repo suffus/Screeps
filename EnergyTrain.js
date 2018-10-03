@@ -24,7 +24,7 @@ module.exports = {
           route: [{structure:'5bb4baf638edad1d8aaa0628', action:'withdraw'},
                 {structure:'5b97c58e57ff3a6290eb0701', action:'deposit'}],
           min: 1,
-          max: 1,
+          max: 2,
           priority: 50,
           capacity: 1000
         },
