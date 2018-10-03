@@ -96,7 +96,11 @@ module.exports = {
         }
         var route = this.route;
         if( creep.memory.route != undefined ) {
-          route = this.routes[ creep.memory.route ].route;
+          if( this.routes[creep.memory.route] == undefined ) {
+            route = this.route;
+          } else {
+            route = this.routes[ creep.memory.route ].route;
+          }
         }
         // First find nearby tombstones etc
         source_dropped = creep.pos.findClosestByPath( FIND_DROPPED_RESOURCES, {
