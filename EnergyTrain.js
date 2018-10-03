@@ -194,8 +194,8 @@ module.exports = {
     },
 
     goNextStation: function( creep ) {
-        if( creep.memory.route == undefined ) {
-          creep.memory.route = 'easternExpress';
+        if( creep.memory.route == undefined || creep.memory.route == 'easternExpress') {
+          creep.memory.route = 'barracksPuffer';
         }
         var route = this.routes[creep.memory.route].route;
 
