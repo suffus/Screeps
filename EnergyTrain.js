@@ -61,8 +61,8 @@ module.exports = {
       for( route in this.routes ) {
         spec = this.routes[ route ];
         if( typeof( spec ) == "object" ) {
-            let count_min = spec[min] || 1;
-            let count_max = spec[max] || 1;
+            let count_min = spec['min'] || 1;
+            let count_max = spec['max'] || 1;
             let body = this.createBody( this.max_energy() );
             let priority = spec['priority'] || 50;
             let job = 'energyTrain:' + route;
