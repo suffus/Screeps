@@ -100,7 +100,7 @@ module.exports = {
                     console.log('Harvester received '+ err + ' while trying to transfer stuff to ' + scructure)
                 }
             } else {
-                spawns = creep.room.find( FIND_MY_STRUCTURES, (x) => x.structureType == STRUCTURE_SPAWN );
+                spawns = Game.rooms[creep.memory.room].find( FIND_MY_STRUCTURES, (x) => x.structureType == STRUCTURE_SPAWN );
                 spawn = spawns[0];
                 if( creep.pos.getRangeTo( spawn ) > 2 ) {
                     creep.moveTo( spawn );
