@@ -68,6 +68,16 @@ module.exports = {
         return common.createBody( bodyTemplate, energy );
     },
 
+    getTargetStructures: function( creep ) {
+      var structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
+         filter: (s) => (s.structureType == STRUCTURE_SPAWN
+                      || s.structureType == STRUCTURE_EXTENSION
+                      || s.structureType == STRUCTURE_TOWER)
+                      && s.energy < s.energyCapacity
+                      && s.pos.roomName == creep.memory.room
+     });
+      return structure;
+    },
 
     run: function( creep ) {
         common=require('Common');
