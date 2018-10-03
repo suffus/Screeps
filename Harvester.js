@@ -82,11 +82,12 @@ module.exports = {
                              || s.structureType == STRUCTURE_EXTENSION
                              || s.structureType == STRUCTURE_TOWER)
                              && s.energy < s.energyCapacity
+                             && s.pos.roomName == creep.memory.room
             });
             if( structure == undefined ) {
                 console.log('Harvester '+ creep.name + ' storing energy');
                 structure = creep.pos.findClosestByPath( FIND_STRUCTURES, {
-                    filter: (s) => s.structureType == STRUCTURE_STORAGE
+                    filter: (s) => s.structureType == STRUCTURE_STORAGE && s.pos.roomName == creem.memory.room
                 });
                 creep.memory.status = 'storing';
             } else {
@@ -123,8 +124,6 @@ module.exports = {
               });
             if( err = ERR_NOT_ENOUGH_RESOURCES ) {
               console.log( "NO SOURCES FOR HARVESTER " + creep.name );
-              
-              //creep.memory.working = true;
             } else {
               console.log( "FILLHERUP RETURNED " + err + " FOR HARVESTER " + creep.name);
             }
