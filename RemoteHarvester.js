@@ -96,7 +96,7 @@ module.exports = {
             if (creep.room.name == creep.memory.target) {
                 // find source
                 var source_source = creep.pos.findClosestByPath( FIND_SOURCES, {
-                    filter: (x) => x.pos.roomName == creep.memory.target
+                    filter: (x) => x.pos.roomName == creep.memory.target && x.energy > 0
                 } );
                 var source_dropped = creep.pos.findClosestByPath( FIND_DROPPED_RESOURCES, {
                     filter: (x) => x.resourceType == RESOURCE_ENERGY && x.pos.roomName == creep.memory.target
@@ -113,6 +113,7 @@ module.exports = {
                     err = creep.transfer( source, RESOURCE_ENERGY );
                 } if( source == undefined ) {
                     console.log( creep.name + " cannot find source to mine in the room");
+                    return;
                 }
                 if( err == ERR_NOT_IN_RANGE || err == ERR_NOT_ENOUGH_RESOURCES ) {
                     creep.moveTo( source );
