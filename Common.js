@@ -41,7 +41,7 @@ module.exports = {
             flag:'Flag2',
             workforce: {
                 //'remoteHarvester':2,
-                'upgrader':1,
+                'upgrader':4,
                 'repairer':'calculate',
                 'builder':'calculate'
             },
