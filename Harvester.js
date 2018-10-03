@@ -87,7 +87,7 @@ module.exports = {
             if( structure == undefined ) {
                 console.log('Harvester '+ creep.name + ' storing energy');
                 structure = creep.pos.findClosestByPath( FIND_STRUCTURES, {
-                    filter: (s) => s.structureType == STRUCTURE_STORAGE && s.pos.roomName == creem.memory.room
+                    filter: (s) => s.structureType == STRUCTURE_STORAGE && s.pos.roomName == creep.memory.room
                 });
                 creep.memory.status = 'storing';
             } else {
