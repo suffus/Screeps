@@ -8,7 +8,7 @@
  */
 
 module.exports = {
-    
+
     create_plan: function( controllers ) {
         common = require('Common');
         thePlan = {};
@@ -16,12 +16,17 @@ module.exports = {
         for( c_name in  controllers ) {
             let c = controllers[ c_name ];
             if( c.create_jobs != undefined ) {
-                for( r in common.roomInfo ) {
-                    rJobs = c.create_jobs( r );
-                    for( j in rJobs ) {
-                        thePlan[j] = rJobs[j];
-                    }
-                }
+              for( r in common.roomInfo ) {
+                  rJobs = c.create_jobs( r, common.roomInfo[r] );
+                  for( j in rJobs ) {
+                      thePlan[j] = rJobs[j];
+                  }
+              }
+            } else if( c.create_all_jobs != undefined ) {
+              rJobs = c.create_all_jobs();
+              for( j in rJobs ) {
+                thePlan[j] = rJobs[j];
+              }
             } else {
                 eA = 1200;
                 min = 0;
@@ -58,6 +63,6 @@ module.exports = {
             defaultPriority--;
         }
         return thePlan;
-    },
+    }
 
 };

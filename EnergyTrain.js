@@ -20,32 +20,32 @@ module.exports = {
     ],
 
     routes: {
-        tankEngine: [{structure:['5b9964c1c84f904d3ccaf2dc','5b9e98683b50fb23e20a6407'],action:'drain'},{structure:'5ba21d0f678e5b460f94737b',action:'withdraw'},
-            {structure:'5b9b76aef2b3a923f3745fd5',action:'withdraw'},{structure:['5b9964c1c84f904d3ccaf2dc','5b9e98683b50fb23e20a6407'],action:'drain'},
-            {structure:'5ba21d0f678e5b460f94737b',action:'withdraw'},
-            {structure:'5b9b76aef2b3a923f3745fd5',action:'withdraw'},{structure:'5b97ea084fe61b156b29b1d6',action:'deposit'}],
-        spawnSupply: [{structure:['5b9964c1c84f904d3ccaf2dc','5b9e98683b50fb23e20a6407'],action:'drain'},{structure:'5b9b76aef2b3a923f3745fd5',action:'withdraw'},
-                        {structure:'5ba21d0f678e5b460f94737b',action:'withdraw'}],
-        linkSupply: [{structure:'5ba22049cb444c51a999611b',action:'drain'},{structure:'5ba1ec7126ecb104baa451e0',action:'withdraw'},
-                        {structure:'5b9e43b104313b172fff9ac7',action:'withdraw'},{structure:'5ba29ff651fc9162c67ebb27',action:'withdraw'}]
+        'waywardChugger': {
+          route: [{structure:'5bb4baf638edad1d8aaa0628', action:'withdraw'},
+                {structure:'5b97c58e57ff3a6290eb0701', action:'deposit'}],
+          min: 1,
+          max: 1,
+          priority: 50,
+          capacity: 1000
+        },
+        'barracksPuffer': { route:[
+                    {structure:['5b9964c1c84f904d3ccaf2dc','5b9e98683b50fb23e20a6407'],action:'drain'}, // LINKS W13S12
+                    {structure:'5ba21d0f678e5b460f94737b',action:'withdraw'}, // LINK W12S12
+                    {structure:'5b97ea084fe61b156b29b1d6',action:'deposit'}, // TOWER
+                    {structure:'5b994a6326ecb104baa0fdb6',action:'deposit'}, // CONTAINER
+                    {structure:'5ba1ec7126ecb104baa451e0',action:'withdraw'}, // CONTAINER W12S13
+                    {structure:'5ba7c1a6d102a632169bd815', action:'withdraw'}, // CONTAINER W11S13
+                    {structure:'5ba29ff651fc9162c67ebb27',action:'withdraw'} // CONTAINER W11S13
+                  ],
+                  min: 3,
+                  max: 4,
+                  priority: 55,
+                  capacity: 1000
+        }
     },
     type: 'energyTrain',
     max: function() {return 4},
     min: function() {return 4},
-
-    selectRoute: function( creep ) {
-        if( creep.memory.service == undefined ) {
-            trains = _.filter( Game.creeps, (x) => x.memory.role == 'energyTrain' );
-            num_trains = []
-            for( let t of trains ) {
-                if( t.memory.service != undefined ){
-                    num_trains[ t.memory.service ]++;
-                }
-            }
-
-        }
-    },
-
     min_energy: function() {
         return 1600;
     },
@@ -56,18 +56,48 @@ module.exports = {
         common=require('Common')
         return common.createBody( [{part:CARRY,quantity:10},{part:MOVE,quantity:6}], eA);
     },
-    run: function ( creep ) {
+    create_all_jobs: function( ) {
+      let rV = {};
+      for( route in this.routes ) {
+        spec = this.routes[ route ];
+        if( typeof( spec ) == "object" ) {
+            let count_min = spec[min] || 1;
+            let count_max = spec[max] || 1;
+            let body = this.createBody( this.max_energy() );
+            let priority = spec[priority] || 50;
+            let job = 'energyTrain:' + route;
+            rV[job] = {
+              role: this.type,
+              job: job,
+              min: count_min,
+              max: count_max,
+              priority: priority,
+              body: body,
+              options: {
+                route: route
+              }
+            };
+        } else {
+            console.log( 'Cannot create EnergyTrain for ' + roomName );
+        }
+      }
+      return rV;
+    },
 
+
+    run: function ( creep ) {
         if( creep.memory.nextStation == undefined ) {
             creep.memory.nextStation = 0;
             creep.memory.direction = 1;
         }
-
         if( creep.carry.energy == creep.carryCapacity && creep.memory.nextStation > 4 && creep.memory.direction == 1 ) {
             creep.memory.direction = -1;
             this.goNextStation( creep );
         }
-
+        var route = this.route;
+        if( creep.memory.route != undefined ) {
+          route = this.routes[ creep.memory.route ].route;
+        }
         // First find nearby tombstones etc
         source_dropped = creep.pos.findClosestByPath( FIND_DROPPED_RESOURCES, {
             filter: (r) => r.resourceType == RESOURCE_ENERGY && creep.pos.getRangeTo( r ) <= 5
@@ -88,11 +118,11 @@ module.exports = {
             }
             return;
         }
-        if( this.route[creep.memory.nextStation] == undefined ) {
+        if( route[creep.memory.nextStation] == undefined ) {
             this.goNextStation( creep );
             return;
         }
-        structure = this.route[creep.memory.nextStation].structure;
+        structure = route[creep.memory.nextStation].structure;
         if( structure.constructor == Array ) {
             structures = _.filter(_.map( structure, (x) => Game.getObjectById(x) ), (z) => z != undefined );
             if( structures.length == 0  ) {
@@ -115,7 +145,7 @@ module.exports = {
                 return
             }
         }
-        action = this.route[creep.memory.nextStation].action;
+        action = route[creep.memory.nextStation].action;
         for( structure of structures ) {
             if( creep.pos.getRangeTo( structure ) > 1) {
                 creep.moveTo( structure );
@@ -164,10 +194,11 @@ module.exports = {
     },
 
     goNextStation: function( creep ) {
-        var route = this.route;
-        if( creep.memory.route != undefined ) {
-            route = this.routes[creep.memory.route];
+        if( creep.memory.route == undefined ) {
+          creep.memory.route = 'easternExpress';
         }
+        var route = this.routes[creep.memory.route].route;
+
         while( 1 ) {
             if( creep.memory.nextStation >= route.length - 1 && creep.memory.direction == 1 ) {
                 creep.memory.nextStation = route.length - 1;
@@ -186,9 +217,6 @@ module.exports = {
                 break;
             }
         }
-
     }
-
-
 
 };
