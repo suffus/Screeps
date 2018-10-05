@@ -15,7 +15,9 @@ module.exports = {
                 return;
             }
             structures = Game.rooms[room].find( FIND_STRUCTURES )
-            repair_structures_urgent = structures.filter( (x) => x.structureType != STRUCTURE_WALL && x.structureType != STRUCTURE_RAMPART && x.hits/x.hitsMax < 0.6 )
+            repair_structures_urgent = structures.filter( (x) => x.structureType != STRUCTURE_WALL
+                  && x.structureType != STRUCTURE_RAMPART && x.hits/x.hitsMax < 0.6
+                  && Memory.deprecatedStructures[x.id] == undefined )
             if( Memory.urgentRepairs == undefined ) {
                 Memory.urgentRepairs = {}
             }
@@ -28,9 +30,9 @@ module.exports = {
                         Memory.urgentRepairs[ s.id ] = undefined
                     }
                 }
-                
+
             }
-            
+
             repairers = _.filter( Game.creeps, (x) => x.memory.role == 'repairer' );
             for( s of repair_structures_urgent ) {
                 if( Memory.urgentRepairs[s.id] == undefined) {
