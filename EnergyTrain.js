@@ -34,7 +34,9 @@ module.exports = {
                     {structure:'5b97ea084fe61b156b29b1d6',action:'deposit'}, // TOWER
                     {structure:'5b994a6326ecb104baa0fdb6',action:'deposit'}, // CONTAINER
                     {structure:'5ba1ec7126ecb104baa451e0',action:'withdraw'}, // CONTAINER W12S13
-                    {structure:'5ba7c1a6d102a632169bd815', action:'withdraw'}, // CONTAINER W11S13
+                    {structure:'5ba7c1a6d102a632169bd815',action:'withdraw'}, // CONTAINER W11S13
+                    {structure:'5bb6738e2a47030556e6c59c',action:'withdraw'},
+                    {structure:'5bb73473439e6413c183236e',action:'withdraw'},
                     {structure:'5ba29ff651fc9162c67ebb27',action:'withdraw'} // CONTAINER W11S13
                   ],
                   min: 3,
