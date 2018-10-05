@@ -36,8 +36,7 @@ module.exports = {
                     {structure:'5ba1ec7126ecb104baa451e0',action:'withdraw'}, // CONTAINER W12S13
                     {structure:'5ba7c1a6d102a632169bd815',action:'withdraw'}, // CONTAINER W11S13
                     {structure:'5bb6738e2a47030556e6c59c',action:'withdraw'},
-                    {structure:'5bb73473439e6413c183236e',action:'withdraw'},
-                    {structure:'5ba29ff651fc9162c67ebb27',action:'withdraw'} // CONTAINER W11S13
+                    {structure:'5bb73473439e6413c183236e',action:'withdraw'}
                   ],
                   min: 3,
                   max: 4,
