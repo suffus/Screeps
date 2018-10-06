@@ -26,7 +26,7 @@ module.exports = {
 
     create_all_jobs: function() {
       if( Memory.claim != undefined ) {
-          return {
+        return {
             'claimer': {
               min:1,
               max:1,
@@ -39,9 +39,9 @@ module.exports = {
               },
               body: this.createBody()
             }
-          };
-        }
+        };
       }
+      
       return {};
     },
 
