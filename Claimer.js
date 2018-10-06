@@ -24,7 +24,7 @@ module.exports = {
         return spawn.createCreep( body, undefined, {role:'claimer', working:true, claim: claim} );
     },
 
-    create_all_jobs: {
+    create_all_jobs: function() {
       if( Memory.claim != undefined ) {
         controller = Game.getObjectById( Memory.claim );
         if( controller != undefined && controller.my == false ) {
