@@ -26,8 +26,6 @@ module.exports = {
 
     create_all_jobs: function() {
       if( Memory.claim != undefined ) {
-        controller = Game.getObjectById( Memory.claim );
-        if( controller != undefined && controller.my == false ) {
           return {
             'claimer': {
               min:1,
@@ -42,14 +40,20 @@ module.exports = {
               body: this.createBody()
             }
           };
-        } else {
-            Memory.claim = undefined;
         }
       }
       return {};
     },
 
     run: function( creep ) {
+        common = require('Common');
+        if( Memory.claim == creep.memory.controller ) {
+          Memory.claim = undefined;
+        }
+        if( common.gotoFlag( creep ) < 0 ) {
+          return;
+        }
+
         if( creep.memory.controller != undefined ) {
             controller = Game.getObjectById( creep.memory.controller );
             if( (e=creep.claimController( controller )) == ERR_NOT_IN_RANGE) {
