@@ -91,6 +91,13 @@ module.exports = {
             workforce: {
               remoteHarvester: 2
             }
+        },
+        'W14S13': {
+          flag: 'Flag9',
+          defenceStrategy:'soldier',
+          workforce: {
+            upgrader: 1
+          }
         }
     },
 
