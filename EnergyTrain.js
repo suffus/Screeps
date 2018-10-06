@@ -39,7 +39,7 @@ module.exports = {
                     {structure:'5bb73473439e6413c183236e',action:'withdraw'}
                   ],
                   min: 3,
-                  max: 4,
+                  max: 5,
                   priority: 55,
                   capacity: 1000
         }
