@@ -37,7 +37,7 @@ module.exports = {
               priority: 5,
               options: {
                 working: true,
-                claim: Memory.claim
+                controller: Memory.claim
               },
               body: this.createBody()
             }
