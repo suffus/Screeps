@@ -109,7 +109,7 @@ module.exports = {
         if( energyAvailable > 1200 ) {
             energyAvailable = 1200;
         }
-        bP = [{part:WORK,quantity:5},{part:CARRY,quantity:4},{part:MOVE,quantity:4}];
+        bP = [{part:WORK,quantity:6},{part:CARRY,quantity:6},{part:MOVE,quantity:6}];
         return this.createBody( bP, energyAvailable );
     },
 
