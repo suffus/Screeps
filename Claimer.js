@@ -40,7 +40,7 @@ module.exports = {
                 claim: Memory.claim
               },
               body: this.createBody()
-            };
+            }
           } else {
             Memory.claim = undefined;
           }
