@@ -23,7 +23,32 @@ module.exports = {
         }
         return spawn.createCreep( body, undefined, {role:'claimer', working:true, claim: claim} );
     },
-    
+
+    create_all_jobs: {
+      if( Memory.claim != undefined ) {
+        controller = Game.getObjectById( Memory.claim );
+        if( controller != undefined && controller.my == false ) {
+          return {
+            'claimer': {
+              min:1,
+              max:1,
+              job: 'claimer',
+              role:'claimer',
+              priority: 5,
+              options: {
+                working: true,
+                claim: Memory.claim
+              },
+              body: this.createBody()
+            };
+          } else {
+            Memory.claim = undefined;
+          }
+        }
+      }
+      return {};
+    },
+
     run: function( creep ) {
         if( creep.memory.controller != undefined ) {
             controller = Game.getObjectById( creep.memory.controller );
@@ -40,7 +65,7 @@ module.exports = {
             console.log( "Claimer " + creep.name + " awaits a claim instruction");
         }
     }
-    
-    
+
+
 
 };
