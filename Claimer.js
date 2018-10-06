@@ -41,9 +41,9 @@ module.exports = {
               },
               body: this.createBody()
             }
-          } else {
+          };
+        } else {
             Memory.claim = undefined;
-          }
         }
       }
       return {};
