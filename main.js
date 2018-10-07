@@ -26,13 +26,21 @@ module.exports = {
     },
 
     loop: function() {
+        var common = require('Common');
+        if( Memory.reload == true ) {
           this.creep_controllers = {};
           this.room_controllers = [];
-        var common = require('Common');
-        if( Memory.reload == true  || true  ) {
+          Memory.reload = false;
+        }
+
+        if( Object.values( this.creep_controllers ).length == 0  ) {
+          this.creep_controllers = {};
           for( let mod of this.defCreepMods ) {
             this.registerController( mod );
           }
+        }
+        if( this.room_controllers.length == 0 ) {
+          this.room_controllers = [];
           for( let mod of this.defRoomMods ) {
             this.registerRoomController( mod );
           }
