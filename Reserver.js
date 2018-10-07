@@ -23,7 +23,7 @@ module.exports = {
             options: {
               targetFlag: rInfo.flag,
               controller: controller.id
-            }
+            },
             body: this.createBody()
           };
           return rV;
