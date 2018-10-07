@@ -8,12 +8,10 @@ module.exports = {
         return [CLAIM,CLAIM,CLAIM,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE];
     },
 
-    create_jobs: function( roomName ) {
-      common = require('Common');
-      if( common.roomInfo[roomName].workforce.reserver != 0 ) {
+    create_jobs: function( roomName, rInfo ) {
+      if( rInfo.reserve == true  ) {
         controller = Game.rooms[roomName].controller;
         if( controller.reservation == undefined || controller.reservation.ticksToEnd < 1500 ) {
-
           let rV = {};
           let job = 'reserver:' + roomName;
           rV[ job ] = {
@@ -23,7 +21,7 @@ module.exports = {
             max: 1,
             priority: 30,
             options: {
-              targetFlag: common.roomInfo[roomName].flag,
+              targetFlag: rInfo.flag,
               controller: controller.id
             }
             body: this.createBody()
@@ -32,7 +30,7 @@ module.exports = {
         }
       }
       return {};
-    }
+    },
 
 
     run: function( creep ) {
