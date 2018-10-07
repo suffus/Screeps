@@ -9,8 +9,7 @@
 
 module.exports = {
     runRoom: function( room ) {
-      return;
-        common = require('Common')
+        common = require('Common');
         if( Math.random() < 0.2 ) {
             if( Game.rooms[room] == undefined ) { ///// no structures there
                 return;
@@ -24,11 +23,12 @@ module.exports = {
             }
             for( let s of _.filter( Memory.urgentRepairs, (x) => x!=undefined && x.pos != undefined && x.pos.roomName == room )) {
                 let val = Game.getObjectById( s.id )
-                if( val == null ) {
-                    console.log("Cannot get structure for " + s.id)
+                if( val == null || val == undefined ) {
+                    console.log("Cannot get structure for " + s.id);
+                    Memory.urgentRepairs[ s.id ] = undefined;
                 } else {
                     if( val.hits / val.hitsMax > 0.85 ) {
-                        Memory.urgentRepairs[ s.id ] = undefined
+                        Memory.urgentRepairs[ s.id ] = undefined;
                     }
                 }
 
