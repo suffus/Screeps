@@ -87,6 +87,7 @@ module.exports = {
         },
         'W14S12': {
             flag: 'Flag8',
+            reserve: true,
             defenceStrategy: 'soldier',
             workforce: {
               remoteHarvester: 2
