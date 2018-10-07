@@ -26,14 +26,10 @@ module.exports = {
     },
 
     loop: function() {
-        if( this.creep_controllers == undefined ) {
           this.creep_controllers = {};
-        }
-        if( this.room_controllers == undefined ) {
           this.room_controllers = [];
-        }
         var common = require('Common');
-        if( Memory.reload == true ) {
+        if( Memory.reload == true  || true  ) {
           for( let mod of this.defCreepMods ) {
             this.registerController( mod );
           }
