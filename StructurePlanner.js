@@ -9,6 +9,7 @@
 
 module.exports = {
     runRoom: function( room ) {
+      return;
         common = require('Common')
         if( Math.random() < 0.2 ) {
             if( Game.rooms[room] == undefined ) { ///// no structures there
