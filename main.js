@@ -94,7 +94,9 @@ module.exports = {
             }
         }
 
-        spawnControl.runSpawn();
+        if( Game.time % 3 == 0 ) {
+          spawnControl.runSpawn();
+        }
 
         if( (Game.time % 383) == 0 ) {
             common.buildAndRepairRemote();
