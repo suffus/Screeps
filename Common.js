@@ -183,12 +183,7 @@ module.exports = {
 
     gotoFlag: function( creep, strict ) {
 
-        if( creep.room.name != this.home) {
-            if( Memory.defcon > 0 ) {
-                creep.moveTo( Game.flags.Flag1 );
-                return ERR_BUSY;
-            }
-        }
+        
 
         if( creep.memory.targetFlag != undefined ) {
            console.log(creep.name + " has a target Flag");
