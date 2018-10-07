@@ -31,6 +31,7 @@ module.exports = {
           this.creep_controllers = {};
           this.room_controllers = [];
           Memory.reload = false;
+          Memory.controller_reloads = 0;
         }
 
         if( Object.values( this.creep_controllers ).length == 0  ) {
@@ -38,6 +39,7 @@ module.exports = {
           for( let mod of this.defCreepMods ) {
             this.registerController( mod );
           }
+          ++Memory.controller_reloads;
         }
         if( this.room_controllers.length == 0 ) {
           this.room_controllers = [];
