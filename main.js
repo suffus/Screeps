@@ -26,22 +26,26 @@ module.exports = {
     },
 
     loop: function() {
-        this.creep_controllers = {};
-        this.room_controllers = [];
-        var common = require('Common');
-
-        for( let mod of this.defCreepMods ) {
-          this.registerController( mod );
+        if( this.creep_controllers == undefined ) {
+          this.creep_controllers = {};
         }
-
-        for( let mod of this.defRoomMods ) {
-          this.registerRoomController( mod );
+        if( this.room_controllers == undefined ) {
+          this.room_controllers = [];
+        }
+        var common = require('Common');
+        if( Memory.reload == true ) {
+          for( let mod of this.defCreepMods ) {
+            this.registerController( mod );
+          }
+          for( let mod of this.defRoomMods ) {
+            this.registerRoomController( mod );
+          }
         }
 
         var spawnControl = require('SpawnControl');
         var workerControl = require( 'WorkforceManager');
 
-        thePlan = undefined;
+        let thePlan = undefined;
         if( Memory.jobPlan == undefined || ((Game.time % 17) == 3) || Memory.defcon > 0  ) {
             thePlan = workerControl.create_plan( this.creep_controllers );
             Memory.jobPlan = thePlan;
@@ -59,32 +63,30 @@ module.exports = {
         }
 
         console.log("Running room "+Game.spawns['Spawn1'].room.name+" at time " + Game.time);
-        i=0;
 
-        for( rc of this.room_controllers ) {
+        for( let rc of this.room_controllers ) {
             if( rc.beforeRoom != undefined ) {
                 rc.beforeRoom();
             }
         }
 
-        for( room in common.roomInfo ) {
+        for( let room in common.roomInfo ) {
             for( rc of this.room_controllers ) {
                 //console.log('Runnin room ' + room + " with " +rc.name+" "+i);
                 rc.runRoom( room );
             }
         }
 
-        for( rc of this.room_controllers ) {
+        for( let rc of this.room_controllers ) {
             if( rc.afterRoom != undefined ) {
                 rc.afterRoom();
             }
         }
 
-
         ///// main creep execution loop
         for( let name in Game.creeps ) {
-            var creep = Game.creeps[name];
-            var controller = creep_controllers[creep.memory.role];
+            let creep = Game.creeps[name];
+            let controller = creep_controllers[creep.memory.role];
             if( controller != undefined ) {
                 controller.run( creep );
             } else {
@@ -94,11 +96,7 @@ module.exports = {
 
         spawnControl.runSpawn();
 
-
         if( (Game.time % 383) == 0 ) {
-            if( (Game.time % 3) == 0  ) {
-                common.roleGotoFlag( 'upgrader', 1, 'Flag2')
-            }
             common.buildAndRepairRemote();
         }
         if( Memory.useStorage > 0 ) {
