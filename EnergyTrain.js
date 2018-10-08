@@ -39,7 +39,7 @@ module.exports = {
                   ],
                   route_type: 'line',
                   min: 2,
-                  max: 3,
+                  max: 4,
                   priority: 55,
                   capacity: 1000
         },
