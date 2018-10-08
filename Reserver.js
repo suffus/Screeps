@@ -10,7 +10,10 @@ module.exports = {
 
     create_jobs: function( roomName, rInfo ) {
       if( rInfo.reserve == true  ) {
-        return {};
+        if( Game.rooms[roomName] == undefined ) {
+          console.log("Room " + roomName + " has no data for me");
+          return {};
+        }
         controller = Game.rooms[roomName].controller;
         if( controller.reservation == undefined || controller.reservation.ticksToEnd < 1500 ) {
           let rV = {};
