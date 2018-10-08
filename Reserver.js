@@ -15,6 +15,10 @@ module.exports = {
           return {};
         }
         controller = Game.rooms[roomName].controller;
+        if( controller == undefined ) {
+          console.log( "Reserved room " + roomName + " has no controller to reserve!");
+          return {};
+        }
         if( controller.reservation == undefined || controller.reservation.ticksToEnd < 1500 ) {
           let rV = {};
           let job = 'reserver:' + roomName;
