@@ -32,20 +32,25 @@ module.exports = {
           capacity: 1000
         },
         'barracksPuffer': { route:[
-                    //{structure:['5b9964c1c84f904d3ccaf2dc','5b9e98683b50fb23e20a6407'],action:'drain'}, // LINKS W13S12
-                    //{structure:'5ba21d0f678e5b460f94737b',action:'withdraw'}, // LINK W12S12
-                    {structure:'5ba7a7848a5aa7753406ebaf',action:'deposit'},  //STORAGE
-                    {structure:'5b97ea084fe61b156b29b1d6',action:'deposit'}, // TOWER
-                    {structure:'5b994a6326ecb104baa0fdb6',action:'deposit'}, // CONTAINER
+                    {structure:'5ba22049cb444c51a999611b',action:'drain'}, // CONTAINER
                     {structure:'5ba1ec7126ecb104baa451e0',action:'withdraw'}, // CONTAINER W12S13
                     {structure:'5bbb96916c2e966691e4fd7c',action:'withdraw'},
                     {structure:'5bbb8cac5405771d9c2add27',action:'withdraw'}
                   ],
                   route_type: 'line',
                   min: 2,
-                  max: 5,
+                  max: 3,
                   priority: 55,
                   capacity: 1000
+        },
+        'controllerSupply': {
+          route:[{structure:'5ba7a7848a5aa7753406ebaf',action:'withdraw'},  //STORAGE
+                {structure:'5b97ea084fe61b156b29b1d6',action:'deposit'}, // TOWER
+                {structure:'5b994a6326ecb104baa0fdb6',action:'deposit'}], // CONTAINER]
+          route_type: 'line',
+          min: 1,
+          max: 1,
+          priority: 30
         }
     },
     type: 'energyTrain',
