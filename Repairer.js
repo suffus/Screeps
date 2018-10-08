@@ -10,15 +10,18 @@
 module.exports = {
     type: 'repairer',
     min: function() {return 2;},
-    max: function() {return 3;},
+    max: function() {return Math.floor(3 + Memory.urgentRepairs.length / 4);},
     max_energy: function() {return 1200;},
     work_sequence: function() {return ['brickie'];},
-    
+
     findPoorStructures: function( ) {
         o_out = []
         ctr = 0
         for( let s in Game.structures ) {
-            struct = Game.structures[s]
+            struct = Game.structures[s];
+            if( Memory.deprecatedStructures[struct.id] != undefined ) {
+              continue;
+            }
             if( struct == null || struct == undefined ) {
                 ctr++
                 continue;
@@ -57,7 +60,7 @@ module.exports = {
             // find closest structure with less than max hits
             // Exclude walls because they have way too many max hits and would keep
             // our repairers busy forever. We have to find a solution for that later.
-            
+
             //var worseStructures = _.map(Game.structures, (x,y) => x).sort( (y,x) => y.hits / y.hitsMax - x.hits / x.hitsMax );
             //for( s of worseStructures ) {
             //    console.log( s + ": hits:" + s.hits + " max: " + s.hitsMax)
@@ -66,7 +69,7 @@ module.exports = {
             if( Memory.urgentRepairs != undefined ) {
                 urgents = _.filter( Memory.urgentRepairs, (x,y) => x != undefined ? x.repairer == creep.name : false );
             }
-            
+
             if( urgents[0] != undefined ) {
                 structure = Game.getObjectById(urgents[0].id)
             } else {
@@ -74,7 +77,7 @@ module.exports = {
                 // the second argument for findClosestByPath is an object which takes
                 // a property called filter which can be a function
                 // we use the arrow operator to define it
-                    filter: (s) => s.hits < s.hitsMax && s.structureType != STRUCTURE_WALL && s.structureType != STRUCTURE_RAMPART
+                    filter: (s) => s.hits < s.hitsMax && s.structureType != STRUCTURE_WALL && s.structureType != STRUCTURE_RAMPART && Memory.deprecatedStructures[s.id] == undefined
                 });
             }
 

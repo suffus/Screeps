@@ -117,7 +117,7 @@ module.exports = {
                 } else if( source == source_dropped ) {
                     err = creep.pickup( source, RESOURCE_ENERGY );
                 } else if( source == source_tombstone ) {
-                    err = creep.transfer( source, RESOURCE_ENERGY );
+                    err = creep.withdraw( source, RESOURCE_ENERGY );
                 } if( source == undefined ) {
                     console.log( creep.name + " cannot find source to mine in the room");
                     return;

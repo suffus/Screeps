@@ -9,28 +9,31 @@
 
 module.exports = {
     runRoom: function( room ) {
-        common = require('Common')
+        common = require('Common');
         if( Math.random() < 0.2 ) {
             if( Game.rooms[room] == undefined ) { ///// no structures there
                 return;
             }
             structures = Game.rooms[room].find( FIND_STRUCTURES )
-            repair_structures_urgent = structures.filter( (x) => x.structureType != STRUCTURE_WALL && x.structureType != STRUCTURE_RAMPART && x.hits/x.hitsMax < 0.6 )
+            repair_structures_urgent = structures.filter( (x) => x.structureType != STRUCTURE_WALL
+                  && x.structureType != STRUCTURE_RAMPART && x.hits/x.hitsMax < 0.6
+                  && Memory.deprecatedStructures[x.id] == undefined )
             if( Memory.urgentRepairs == undefined ) {
                 Memory.urgentRepairs = {}
             }
             for( let s of _.filter( Memory.urgentRepairs, (x) => x!=undefined && x.pos != undefined && x.pos.roomName == room )) {
                 let val = Game.getObjectById( s.id )
-                if( val == null ) {
-                    console.log("Cannot get structure for " + s.id)
+                if( val == null || val == undefined ) {
+                    console.log("Cannot get structure for " + s.id);
+                    Memory.urgentRepairs[ s.id ] = undefined;
                 } else {
                     if( val.hits / val.hitsMax > 0.85 ) {
-                        Memory.urgentRepairs[ s.id ] = undefined
+                        Memory.urgentRepairs[ s.id ] = undefined;
                     }
                 }
-                
+
             }
-            
+
             repairers = _.filter( Game.creeps, (x) => x.memory.role == 'repairer' );
             for( s of repair_structures_urgent ) {
                 if( Memory.urgentRepairs[s.id] == undefined) {

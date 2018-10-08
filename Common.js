@@ -22,7 +22,7 @@ module.exports = {
             workforce: {
                 'dedicated_harvester':2,
                 'harvester':2,
-                'upgrader':5,
+                'upgrader':3,
                 'repairer':1,
                 'brickie':1,
                 'defender':1,
@@ -41,7 +41,7 @@ module.exports = {
             flag:'Flag2',
             workforce: {
                 //'remoteHarvester':2,
-                'upgrader':4,
+                'upgrader':2,
                 'repairer':'calculate',
                 'builder':'calculate'
             },
@@ -87,10 +87,19 @@ module.exports = {
         },
         'W14S12': {
             flag: 'Flag8',
+            reserve: true,
             defenceStrategy: 'soldier',
             workforce: {
-              remoteHarvester: 2
+              remoteHarvester: 3
             }
+        },
+        'W14S13': {
+          flag: 'Flag9',
+          defenceStrategy:'soldier',
+          workforce: {
+            upgrader: 2,
+            remoteHarvester: 1
+          }
         }
     },
 
@@ -102,7 +111,7 @@ module.exports = {
         if( energyAvailable > 1200 ) {
             energyAvailable = 1200;
         }
-        bP = [{part:WORK,quantity:5},{part:CARRY,quantity:4},{part:MOVE,quantity:4}];
+        bP = [{part:WORK,quantity:6},{part:CARRY,quantity:6},{part:MOVE,quantity:6}];
         return this.createBody( bP, energyAvailable );
     },
 
@@ -174,12 +183,7 @@ module.exports = {
 
     gotoFlag: function( creep, strict ) {
 
-        if( creep.room.name != this.home) {
-            if( Memory.defcon > 0 ) {
-                creep.moveTo( Game.flags.Flag1 );
-                return ERR_BUSY;
-            }
-        }
+
 
         if( creep.memory.targetFlag != undefined ) {
            console.log(creep.name + " has a target Flag");

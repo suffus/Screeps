@@ -23,8 +23,37 @@ module.exports = {
         }
         return spawn.createCreep( body, undefined, {role:'claimer', working:true, claim: claim} );
     },
-    
+
+    create_all_jobs: function() {
+      if( Memory.claim != undefined ) {
+        return {
+            'claimer': {
+              min:1,
+              max:1,
+              job: 'claimer',
+              role:'claimer',
+              priority: 5,
+              options: {
+                working: true,
+                controller: Memory.claim
+              },
+              body: this.createBody()
+            }
+        };
+      }
+      
+      return {};
+    },
+
     run: function( creep ) {
+        common = require('Common');
+        if( Memory.claim == creep.memory.controller ) {
+          Memory.claim = undefined;
+        }
+        if( common.gotoFlag( creep ) < 0 ) {
+          return;
+        }
+
         if( creep.memory.controller != undefined ) {
             controller = Game.getObjectById( creep.memory.controller );
             if( (e=creep.claimController( controller )) == ERR_NOT_IN_RANGE) {
@@ -40,7 +69,7 @@ module.exports = {
             console.log( "Claimer " + creep.name + " awaits a claim instruction");
         }
     }
-    
-    
+
+
 
 };
