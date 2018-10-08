@@ -10,7 +10,7 @@
 module.exports = {
     type: 'repairer',
     min: function() {return 2;},
-    max: function() {return Math.floor(3 + Memory.urgentRepairs.length / 4);},
+    max: function() {return Math.ceil(3 + Memory.urgentRepairs.length / 4);},
     max_energy: function() {return 1200;},
     work_sequence: function() {return ['brickie'];},
 
