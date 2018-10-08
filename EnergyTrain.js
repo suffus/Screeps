@@ -22,6 +22,7 @@ module.exports = {
     routes: {
         'waywardChugger': {
           route: [{structure:'5bbb76453923961397f214b3', action:'withdraw'},
+                {structure: '5bbb797b7293b00c84b491cc', action:'withdraw'},
                 {structure:'5bbb677229aba96c5ba3a620', action:'drain'}],
           min: 1,
           max: 2,
