@@ -59,7 +59,7 @@ module.exports = {
         }
 
 
-        if(hostile != undefined) {
+        if( hostile != undefined ) {
             var username = hostile.owner.username;
             creep.memory.reported_hostile_pos = hostile.pos;
             console.log('******* HOSTILES IDENTIFIED IN ' + creep.pos.roomName + " by " + creep.name + " in " + hostile.pos);
@@ -67,8 +67,8 @@ module.exports = {
 
             if(creep.attack( hostile) == ERR_NOT_IN_RANGE || creep.rangedAttack(hostile) == ERR_NOT_IN_RANGE) {
                 if( creep.pos.getRangeTo( hostile ) > 0 && (creep.memory.rampart == undefined) ) {
-
                     err = creep.moveTo( hostile);
+                    creep.heal(creep);
                     console.log( "Creep " + creep.name + " trying to move to hostile returned " + err)
                 }
                 return;

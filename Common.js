@@ -90,7 +90,7 @@ module.exports = {
             reserve: true,
             defenceStrategy: 'soldier',
             workforce: {
-              remoteHarvester: 2
+              remoteHarvester: 3
             }
         },
         'W14S13': {
@@ -183,7 +183,7 @@ module.exports = {
 
     gotoFlag: function( creep, strict ) {
 
-        
+
 
         if( creep.memory.targetFlag != undefined ) {
            console.log(creep.name + " has a target Flag");
