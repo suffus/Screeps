@@ -26,7 +26,7 @@ module.exports = {
             job = {
                 role: this.type,
                 job: this.type + ":" + roomName,
-                min: 2,
+                min: 1,
                 max: 2,
                 spawns: _.map( spawns, (x) => x.id ),
                 options: {room:roomName},
@@ -68,7 +68,7 @@ module.exports = {
         return common.createBody( bodyTemplate, energy );
     },
 
-    getTargetStructures: function( creep ) {
+    getTargetStructure: function( creep ) {
       var structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
          filter: (s) => (s.structureType == STRUCTURE_SPAWN
                       || s.structureType == STRUCTURE_EXTENSION
@@ -87,13 +87,7 @@ module.exports = {
         }
 
         if( common.checkWorking( creep ) == true ) {
-             var structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
-                filter: (s) => (s.structureType == STRUCTURE_SPAWN
-                             || s.structureType == STRUCTURE_EXTENSION
-                             || s.structureType == STRUCTURE_TOWER)
-                             && s.energy < s.energyCapacity
-                             && s.pos.roomName == creep.memory.room
-            });
+             var structure = this.getTargetStructure( creep );
             if( structure == undefined ) {
                 console.log('Harvester '+ creep.name + ' storing energy');
                 structure = creep.pos.findClosestByPath( FIND_STRUCTURES, {
