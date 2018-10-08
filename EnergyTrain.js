@@ -24,6 +24,8 @@ module.exports = {
           route: [{structure:'5bbb677229aba96c5ba3a620', action:'drain'},
                 {structure:'5bbb797b7293b00c84b491cc', action:'withdraw'},
                 {structure:'5bbb76453923961397f214b3', action:'withdraw'}],
+          when_full: 0,
+          route_type: 'circle',
           min: 1,
           max: 2,
           priority: 50,
@@ -40,6 +42,7 @@ module.exports = {
                     {structure:'5bb6738e2a47030556e6c59c',action:'withdraw'},
                     {structure:'5bb73473439e6413c183236e',action:'withdraw'}
                   ],
+                  route_type: 'line',
                   min: 3,
                   max: 5,
                   priority: 55,
@@ -93,6 +96,7 @@ module.exports = {
             creep.memory.nextStation = 0;
             creep.memory.direction = 1;
         }
+        
         if( creep.carry.energy == creep.carryCapacity && creep.memory.nextStation > 4 && creep.memory.direction == 1 ) {
             creep.memory.direction = -1;
             this.goNextStation( creep );
@@ -205,25 +209,57 @@ module.exports = {
           creep.memory.route = 'barracksPuffer';
         }
         var route = this.routes[creep.memory.route].route;
+        let rType = this.routes[creep.memory.route].route_type;
 
-        while( 1 ) {
-            if( creep.memory.nextStation >= route.length - 1 && creep.memory.direction == 1 ) {
-                creep.memory.nextStation = route.length - 1;
-                creep.memory.direction = -1;
-            } else if( creep.memory.nextStation == 0 && creep.memory.direction == -1 ) {
+        if( rType == 'line') {
+          let n = route.length + 1;
+          while( n > 0 ) {
+              if( creep.memory.nextStation >= route.length - 1 && creep.memory.direction == 1 ) {
+                  creep.memory.nextStation = route.length - 1;
+                  creep.memory.direction = -1;
+              } else if( creep.memory.nextStation == 0 && creep.memory.direction == -1 ) {
                 creep.memory.direction = 1;
+              }
+              creep.memory.nextStation += creep.memory.direction;
+              s = route[creep.memory.nextStation].structure;
+              if( this.isStructureOK( s ) ) {
+                break;
+              }
+              n = n - 1;
             }
+        } else if( rType == 'circle' ) {
+          let n = route.length + 1;
+          while( n > 0 ) {
             creep.memory.nextStation += creep.memory.direction;
-            s = route[creep.memory.nextStation].structure;
-            if( Array.isArray(s) ) {
-                break;
-            } else if( Game.getObjectById( s ) == undefined) {
-                console.log( "!!!!!******!!!!! Train " + creep.name + " could not find source " + s)
-                continue;
-            } else {
-                break;
+            if( creep.memory.nextStation < 0 ) {
+              creep.memory.nextStation = route.length - 1;
+            } else if( creep.memory.nextStation >= route.length ) {
+              creep.memory.nextStation = 0;
             }
+            let s = route[creep.memory.nextStation];
+            if( this.isStructureOK( s ) ) {
+              break;
+            }
+            n = n - 1;
+          }
+        } else {
+          console.log( "Unidentified route type " + rType + " for energyTrain");
         }
+    },
+
+    isStructureOK: function( struct ) {
+      if( Array.isArray( struct )) {
+        for( let a of struct ) {
+          if( Game.getObjectById( a ) != undefined ) {
+            return true;
+          }
+        }
+      } else {
+        if( Game.getObjectById( struct ) != undefined ) {
+          return true;
+        }
+      }
+      return false;
     }
 
 };
