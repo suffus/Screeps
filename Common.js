@@ -22,7 +22,7 @@ module.exports = {
             workforce: {
                 'dedicated_harvester':2,
                 'harvester':2,
-                'upgrader':5,
+                'upgrader':2,
                 'repairer':1,
                 'brickie':1,
                 'defender':1,
@@ -41,7 +41,7 @@ module.exports = {
             flag:'Flag2',
             workforce: {
                 //'remoteHarvester':2,
-                'upgrader':4,
+                'upgrader':2,
                 'repairer':'calculate',
                 'builder':'calculate'
             },
