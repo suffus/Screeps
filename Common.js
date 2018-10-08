@@ -22,7 +22,7 @@ module.exports = {
             workforce: {
                 'dedicated_harvester':2,
                 'harvester':2,
-                'upgrader':2,
+                'upgrader':3,
                 'repairer':1,
                 'brickie':1,
                 'defender':1,
