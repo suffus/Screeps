@@ -51,6 +51,16 @@ module.exports = {
           min: 1,
           max: 1,
           priority: 30
+        },
+        'bayCityRoller': {
+          route:[{structure:'5bbc737e7acddf6697ecacba',action:'withdraw'},
+                 {structure:'5bba9c2c869bf637939d0b62',action:'deposit'}],
+          route_type: 'line',
+          min: 1,
+          max: 1,
+          priority: 30,
+          spawns: ['5bb90ff83f0d7d0acfa25762'],
+          size: 1300
         }
     },
     type: 'energyTrain',
@@ -73,7 +83,11 @@ module.exports = {
         if( typeof( spec ) == "object" ) {
             let count_min = spec['min'] || 1;
             let count_max = spec['max'] || 1;
-            let body = this.createBody( this.max_energy() );
+            let energy = this.max_energy();
+            if( spec.size > 0 ) {
+              energy = spec.size;
+            }
+            let body = this.createBody( energy );
             let priority = spec['priority'] || 50;
             let job = 'energyTrain:' + route;
             rV[job] = {
@@ -87,6 +101,9 @@ module.exports = {
                 route: route
               }
             };
+            if( spec.spawns != undefined ) {
+              rV[job].spawns = spec.spawns;
+            }
         } else {
             console.log( 'Cannot create EnergyTrain for ' + roomName );
         }
