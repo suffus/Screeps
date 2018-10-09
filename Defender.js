@@ -68,7 +68,9 @@ module.exports = {
             if(creep.attack( hostile) == ERR_NOT_IN_RANGE || creep.rangedAttack(hostile) == ERR_NOT_IN_RANGE) {
                 if( creep.pos.getRangeTo( hostile ) > 0 && (creep.memory.rampart == undefined) ) {
                     err = creep.moveTo( hostile);
-                    creep.heal(creep);
+                    if( creep.body[0].hits < 100 ) {
+                      creep.heal(creep);
+                    }
                     console.log( "Creep " + creep.name + " trying to move to hostile returned " + err)
                 }
                 return;
