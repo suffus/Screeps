@@ -99,7 +99,12 @@ module.exports = {
           workforce: {
             upgrader: 2,
             remoteHarvester: 1
+          },
+          regions: {
+              'spawnRegion': {type:'circle',pos:{x:38,y:38},radius:12},
+              'controllerRegion': {type:'circle',pos:{x:30,y:40},radius:10}
           }
+
         }
     },
 
