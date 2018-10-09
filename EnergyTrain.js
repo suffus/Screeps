@@ -54,10 +54,11 @@ module.exports = {
         },
         'bayCityRoller': {
           route:[{structure:'5bbc737e7acddf6697ecacba',action:'withdraw'},
-                 {structure:'5bba9c2c869bf637939d0b62',action:'deposit'}],
+                 {structure:'5bba9c2c869bf637939d0b62',action:'withdraw'},
+                 {structure:'5bbcfa7eba5e474357682275',action:'deposit'}],
           route_type: 'line',
           min: 1,
-          max: 1,
+          max: 2,
           priority: 30,
           spawns: ['5bb90ff83f0d7d0acfa25762'],
           size: 1300
