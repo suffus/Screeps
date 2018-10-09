@@ -11,7 +11,7 @@ module.exports = {
     name: 'Link',
 
     runRoom: function( room, roomInfo ) {
-        if( roomInfo.links == undefined ) {
+        if( roomInfo == undefined || roomInfo.links == undefined ) {
             return ERR_NOT_FOUND;
         }
         for( let lnk_id of roomInfo.links.from) {
