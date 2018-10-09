@@ -9,16 +9,6 @@
 
 module.exports = {
 
-    route: [
-      {structure:['5b9964c1c84f904d3ccaf2dc','5b9e98683b50fb23e20a6407'],action:'drain'}, // LINKS W13S12
-      {structure:'5ba21d0f678e5b460f94737b',action:'withdraw'}, // LINK W12S12
-      {structure:'5b97ea084fe61b156b29b1d6',action:'deposit'}, // TOWER
-      {structure:'5b994a6326ecb104baa0fdb6',action:'deposit'}, // CONTAINER
-      {structure:'5ba1ec7126ecb104baa451e0',action:'withdraw'}, // CONTAINER W12S13
-      {structure:'5ba7c1a6d102a632169bd815', action:'withdraw'}, // CONTAINER W11S13
-      {structure:'5ba29ff651fc9162c67ebb27',action:'withdraw'} // CONTAINER W11S13
-    ],
-
     routes: {
         'waywardChugger': {
           route: [{structure:'5bbb677229aba96c5ba3a620', action:'drain'},
@@ -56,7 +46,7 @@ module.exports = {
           route:[{structure:'5bbc737e7acddf6697ecacba',action:'withdraw'},
                  {structure:'5bba9c2c869bf637939d0b62',action:'withdraw'},
                  {structure:'5bbcfa7eba5e474357682275',action:'deposit'}],
-          route_type: 'line',
+          route_type: 'circle',
           min: 1,
           max: 2,
           priority: 30,
