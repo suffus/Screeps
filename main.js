@@ -25,12 +25,15 @@ module.exports = {
         this.room_controllers.push( controller );
     },
 
+    common: require('Common');
+
     loop: function() {
-        var common = require('Common');
+        var common = this.common;
         if( Memory.reload == true ) {
           this.creep_controllers = {};
           this.room_controllers = [];
           Memory.reload = false;
+          Memory.jobPlan = undefined;
           Memory.controller_reloads = 0;
         }
 
@@ -52,7 +55,7 @@ module.exports = {
         var workerControl = require( 'WorkforceManager');
 
         let thePlan = undefined;
-        if( Memory.jobPlan == undefined || ((Game.time % 17) == 3) || Memory.defcon > 0  ) {
+        if( Memory.jobPlan == undefined || ((Game.time % 17) == 3) || (Memory.defcon > 0)  ) {
             thePlan = workerControl.create_plan( this.creep_controllers );
             Memory.jobPlan = thePlan;
             Memory.creep_sched = [];
@@ -105,10 +108,39 @@ module.exports = {
         }
 
         if( (Game.time % 383) == 0 ) {
-            common.buildAndRepairRemote();
+            this.buildAndRepairRemote();
         }
         if( Memory.useStorage > 0 ) {
             Memory.useStorage--;
+        }
+    },
+
+    buildAndRepairRemote: function( role, r ) {
+        var remotes = [];
+        for( rm in common.roomInfo ) {
+            if( rm != this.home ) {
+                remotes.push( rm );
+            }
+        }
+
+        if( r == undefined ) {
+            r = remotes[ Math.floor( Math.random() * remotes.length )];
+
+        }
+        var room = Game.rooms[r];
+        flag = this.roomInfo[r].flag;
+
+        if( role == undefined ) {
+            role = 'repairer';
+        }
+        creeps = _.filter( Game.creeps, (x) => x.memory.role == role && x.pos.roomName != r );
+        if( creeps != undefined && creeps[creeps.length - 1] != undefined ) {
+            creep = creeps[creeps.length - 1];
+            console.log("**** Sending " + creep.name + " to flag " + flag + " as a " + role);
+            creep.memory.working  = true;
+            creep.memory.targetFlag = flag;
+        } else {
+            console.log( "**** Remote repairing - no creeps available")
         }
     }
 }

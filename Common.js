@@ -372,40 +372,6 @@ module.exports = {
         }
     },
 
-
-    buildAndRepairRemote: function( role, r ) {
-        var remotes = [];
-        for( rm in this.roomInfo ) {
-            if( rm != this.home ) {
-                remotes.push( rm );
-            }
-        }
-
-        if( r == undefined ) {
-            r = remotes[ Math.floor( Math.random() * remotes.length )];
-
-        }
-        var room = Game.rooms[r];
-        flag = this.roomInfo[r].flag;
-
-        if( role == undefined && room != undefined && room.controller != undefined && room.controller.my == true && (Game.time % 2) == 0 ) {
-            role = 'upgrader';
-        } else {
-            if( role == undefined ) {
-                role = 'repairer';
-            }
-        }
-        creeps = _.filter( Game.creeps, (x) => x.memory.role == role && x.pos.roomName == this.home );
-        if( creeps != undefined && creeps[creeps.length - 1] != undefined ) {
-            creep = creeps[creeps.length - 1];
-            console.log("**** Sending " + creep.name + " to flag " + flag + " as a " + role);
-            creep.memory.working  = true;
-            creep.memory.targetFlag = flag;
-        } else {
-            console.log( "**** Remote repairing - no creeps available")
-        }
-    },
-
     isInRegion: function( pos, r ) {
         rInfo = this.roomInfo[pos.roomName].regions;
         if( rInfo == undefined ) {
