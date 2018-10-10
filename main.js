@@ -25,7 +25,7 @@ module.exports = {
         this.room_controllers.push( controller );
     },
 
-    common: require('Common');
+    common: require('Common'),
 
     loop: function() {
         var common = this.common;
