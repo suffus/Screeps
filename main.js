@@ -117,6 +117,7 @@ module.exports = {
 
     buildAndRepairRemote: function( role, r ) {
         var remotes = [];
+        var common = require('Common');
         for( rm in common.roomInfo ) {
             if( rm != this.home ) {
                 remotes.push( rm );
