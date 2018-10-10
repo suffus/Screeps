@@ -119,7 +119,7 @@ module.exports = {
         var remotes = [];
         var common = require('Common');
         for( rm in common.roomInfo ) {
-            if( rm != this.home ) {
+            if( rm != common.home ) {
                 remotes.push( rm );
             }
         }
@@ -129,7 +129,7 @@ module.exports = {
 
         }
         var room = Game.rooms[r];
-        flag = this.roomInfo[r].flag;
+        flag = common.roomInfo[r].flag;
 
         if( role == undefined ) {
             role = 'repairer';
