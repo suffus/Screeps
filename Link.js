@@ -19,7 +19,7 @@ module.exports = {
             if( link != undefined && link.energy > (link.energyCapacity - 100) ) {
                 let linkToRef = roomInfo.links.to;
                 if( Array.isArray( linkToRef ) ) {
-                    let links = _.filter(_.map( linkToRef, (x) => Game.getObjectById( x )), (x) => x.energy < 100 );
+                    let links = _.filter(_.map( linkToRef, (x) => Game.getObjectById( x )), (x) => x != null && x.energy < 100 );
                     if( links.length == 0 ) {
                       return ERR_FULL;
                     }
