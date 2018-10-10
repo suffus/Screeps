@@ -10,9 +10,9 @@
 module.exports = {
 
 
-    roomFlags: {'W13S12':'Flag1', 'W12S12':'Flag2', 'W12S13':'Flag3', 'W12S13':'Flag5'},
-    remoteRooms: ['W12S12','W12S13','W11S13'],
-    rooms: ['W13S12','W12S12','W12S13','W11S13', 'W11S12'],
+    //roomFlags: {'W13S12':'Flag1', 'W12S12':'Flag2', 'W12S13':'Flag3', 'W12S13':'Flag5'},
+    //remoteRooms: ['W12S12','W12S13','W11S13'],
+    //rooms: ['W13S12','W12S12','W12S13','W11S13', 'W11S12'],
 
     home: 'W13S12',
     roomInfo: {
@@ -20,13 +20,7 @@ module.exports = {
             flag: 'Flag1',
 
             workforce: {
-                'dedicated_harvester':2,
-                'harvester':2,
-                'upgrader':4,
-                'repairer':1,
-                'brickie':1,
-                'defender':1,
-                'builder':'calculate'
+                'upgrader':4
             },
             links: {
                 from:['5b9e98683b50fb23e20a6407','5bbb677229aba96c5ba3a620'],
@@ -40,10 +34,7 @@ module.exports = {
         'W12S12':{
             flag:'Flag2',
             workforce: {
-                //'remoteHarvester':2,
-                'upgrader':3,
-                'repairer':'calculate',
-                'builder':'calculate'
+                'upgrader':3
             },
             links:{
                 from:['5ba22049cb444c51a999611b'],
@@ -57,18 +48,14 @@ module.exports = {
             flag:'Flag3',
             defenceStrategy:'soldier',
             workforce: {
-                remoteHarvester : 1,
-                builder: 'calculate',
-                repairer: 'calculate'
+                remoteHarvester : 1
             }
         },
         'W11S13': {
             flag:'Flag5',
             defenceStrategy:'soldier',
             workforce: {
-                remoteHarvester : 1,
-                builder: 'calculate',
-                repairer: 'calculate'
+                remoteHarvester : 1
             }
         },
         'W11S12': {
@@ -100,8 +87,7 @@ module.exports = {
             upgrader: 3
           },
           regions: {
-              'spawnRegion': {type:'circle',pos:{x:38,y:38},radius:12},
-              'controllerRegion': {type:'circle',pos:{x:30,y:40},radius:10}
+              'spawnRegion': {type:'circle',pos:{x:38,y:38},radius:12}
           }
 
         }
