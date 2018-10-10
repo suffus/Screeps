@@ -20,7 +20,7 @@ module.exports = {
             flag: 'Flag1',
 
             workforce: {
-                'upgrader':4
+                'upgrader':6
             },
             links: {
                 from:['5b9e98683b50fb23e20a6407','5bbb677229aba96c5ba3a620'],
