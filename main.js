@@ -79,7 +79,7 @@ module.exports = {
         for( let room in common.roomInfo ) {
             for( rc of this.room_controllers ) {
                 //console.log('Runnin room ' + room + " with " +rc.name+" "+i);
-                rc.runRoom( room );
+                rc.runRoom( room, common.roomInfo[room] );
             }
         }
 
