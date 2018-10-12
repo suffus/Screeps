@@ -49,6 +49,9 @@ module.exports = {
             }
 
             for( let s in src.store ) {
+              if( src.store[s] == 0 ) {
+                continue;
+              }
               if( creep.memory.docket.resources == undefined || creep.memory.docket.resources[s] != undefined ) {
                 let err = -100;
                 if( (err = creep.withdraw( src, s )) == OK ) {
