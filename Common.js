@@ -14,7 +14,10 @@ module.exports = {
     roomInfo: {
         'W13S12':{
             flag: 'Flag1',
-
+            map: {
+              'storage1':  '5b97c58e57ff3a6290eb0701',
+              'terminal1': '5ba6c8f4518a27074ff93f66'
+            },
             workforce: {
                 'upgrader':6
             },
@@ -79,6 +82,9 @@ module.exports = {
         'W14S13': {
           flag: 'Flag9',
           defenceStrategy:'soldier',
+          map: {
+            'oldStorage':'59fa3212b09d12469bf863ff'
+          },
           workforce: {
             upgrader: 3
           },
