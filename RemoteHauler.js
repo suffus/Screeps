@@ -22,7 +22,7 @@ module.exports = {
         'min': 0,
         'max': 1,
         'priority': 10,
-        'body': this.create_body( 1800 ),
+        'body': this.createBody( 1800 ),
         'options': {
 
         }
