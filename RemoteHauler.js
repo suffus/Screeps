@@ -54,7 +54,7 @@ module.exports = {
                 if( (err = creep.withdraw( src, s )) == OK ) {
                   return;
                 }
-                console.log( "Hauler attempting to withdraw " + s + " from " + src " received " + err);
+                console.log( "Hauler attempting to withdraw " + s + " from " + src + " received " + err);
                 return;
               }
             }
