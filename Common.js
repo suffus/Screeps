@@ -10,10 +10,6 @@
 module.exports = {
 
 
-    //roomFlags: {'W13S12':'Flag1', 'W12S12':'Flag2', 'W12S13':'Flag3', 'W12S13':'Flag5'},
-    //remoteRooms: ['W12S12','W12S13','W11S13'],
-    //rooms: ['W13S12','W12S12','W12S13','W11S13', 'W11S12'],
-
     home: 'W13S12',
     roomInfo: {
         'W13S12':{
@@ -111,35 +107,31 @@ module.exports = {
 
 
     createBody: function( bodyPrototype, energyAvailable ) {
-        bodyPartCost = {
-            'work':100,'carry':50,'move':50,'attack':80,'ranged_attack':150,'tough':10,'heal':250,'claim':600
-        };
-        totalCost = 0;
+        let bodyPartCost = this.bodyPartCost;
+        let totalCost = 0;
         _.map( bodyPrototype, function(x) {totalCost += x.quantity * bodyPartCost[x.part];} );
-        scaleFactor = energyAvailable/totalCost;
-        body = [];
+        let scaleFactor = energyAvailable/totalCost;
+        let body = [];
         //console.log("cost="+totalCost+", energy="+energyAvailable+", scaleFactor = "+scaleFactor+", WorkCost="+bodyPartCost[WORK]+", firtPart = "+bodyPrototype[0].part);
-        for( unit of bodyPrototype ) {
-            units = Math.floor( unit.quantity*scaleFactor );
+        for( let unit of bodyPrototype ) {
+            let units = Math.floor( unit.quantity*scaleFactor );
             if( units < 1 ) {
-                bps = _.map( bodyPrototype, (x) => x.part+":"+x.quantity).join(",")
+                let bps = _.map( bodyPrototype, (x) => x.part+":"+x.quantity).join(",")
                 console.log("Cannot create body prototype - not enough energy: " + bps);
                 return [];
             }
-            for( i = 0; i < units; i++ ) {
+            for( let i = 0; i < units; i++ ) {
                 body.push( unit.part );
             }
         }
-        bCost = 0;
+        let bCost = 0;
         _.map(body, function(x) {bCost += bodyPartCost[x]});
-        bS = body.join();
-        console.log("Body = "+ bS+", cost = "+bCost);
+        console.log("Body = " + body.join() + ", cost = " + bCost);
         return body;
-
     },
 
     calculateBodyCost: function( body ) {
-        return _.sum( body, (x) => this.bodyPartCost[x])
+        return _.sum( body, (x) => this.bodyPartCost[x]);
     },
 
     creepsGotoFlag: function( creeps, flag ) {
@@ -168,13 +160,9 @@ module.exports = {
         _.map( assigned_creeps, (x) => x.memory.targetFlag = flag );
         _.map( assigned_creeps, (x) => x.memory.sourceTarget = undefined );
         return OK;
-
     },
 
     gotoFlag: function( creep, strict ) {
-
-
-
         if( creep.memory.targetFlag != undefined ) {
            console.log(creep.name + " has a target Flag");
            creep.memory.sourceTarget = undefined
