@@ -76,7 +76,7 @@ module.exports = {
               return;
             }
             for( let s in creep.carry ) {
-              let err = creep.tansfer( src, s );
+              let err = creep.transfer( src, s );
               if( err == ERR_FULL ) {
                 console.log( 'Hauler trying to transer into full vessel');
                 return err;
