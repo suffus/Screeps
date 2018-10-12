@@ -55,7 +55,9 @@ module.exports = {
                   return;
                 }
                 console.log( "Hauler attempting to withdraw " + s + " from " + src + " received " + err);
-                return;
+                if( err != ERR_FULL ) {
+                  return;
+                }
               }
             }
             creep.memory.status = "delivering";
