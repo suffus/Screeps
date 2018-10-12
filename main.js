@@ -4,7 +4,7 @@ module.exports = {
     defCreepMods: ['DedicatedHarvester', 'Harvester', 'Defender',
                 'RemoteHarvester', 'Healer', 'EnergyTrain',
                 'Claimer', 'Builder', 'Repairer', 'TopUp',
-                'Brickie', 'MineralHarvester', 'Reserver'],
+                'Brickie', 'MineralHarvester', 'Reserver', 'RemoteHauler'],
 
     defRoomMods: [ 'Link', 'Defence', 'StructurePlanner'],
 
