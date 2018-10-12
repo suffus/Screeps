@@ -43,7 +43,7 @@ module.exports = {
         if( creep.memory.status == 'collecting' ) {
           let src = Game.getObjectById( creep.memory.docket['from'] );
           if( src != undefined ) {
-            if( creep.getRangeTo( src ) > 1 ) {
+            if( creep.pos.getRangeTo( src ) > 1 ) {
               creep.moveTo( src );
               return;
             }
