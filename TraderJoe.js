@@ -5,7 +5,7 @@ module.exports = {
     type: 'trader',
 
 
-    doTrade: function( ) {
+    doTrade: function( forReal ) {
               if( Memory.trades == undefined ) {
                 return ERR_NOT_FOUND;
               }
@@ -18,6 +18,10 @@ module.exports = {
                   console.log( "There are " + validOrders.length + " valid orders");
                   for( v of validOrders ) {
                     console.log( v.id + " " + v.price + " " + v.roomName + " " + v.remainingAmount + " " + Game.market.calcTransactionCost( 1000, v.roomName, trade.roomName))
+                    if( forReal ) {
+                      Game.market.trade( v.id, trade.amount, trade.roomName );
+                      Memory.trades.shift();
+                    }
                   }
                 }
               }
