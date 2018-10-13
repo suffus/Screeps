@@ -27,12 +27,15 @@ module.exports = {
                         tAmount = v.remainingAmount;
                       }
 
-                      Game.market.trade( v.id, tAmount, trade.roomName );
-                      amount -= tAmount;
-                      if( amount == 0 ) {
-                        Memory.trades.shift();
-                      } else {
-                        trade.amount = amount;
+                      let err = Game.market.deal( v.id, tAmount, trade.roomName );
+                      console.log("Attempted Trade returned " + err );
+                      if( err == 0 ) {
+                        amount -= tAmount;
+                        if( amount == 0 ) {
+                          Memory.trades.shift();
+                        } else {
+                          trade.amount = amount;
+                        }
                       }
                     }
                   }
