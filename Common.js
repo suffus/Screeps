@@ -19,7 +19,7 @@ module.exports = {
               'terminal1': '5ba6c8f4518a27074ff93f66'
             },
             workforce: {
-                'upgrader':6
+                'upgrader':5
             },
             links: {
                 from:['5b9e98683b50fb23e20a6407','5bbb677229aba96c5ba3a620'],
@@ -33,7 +33,7 @@ module.exports = {
         'W12S12':{
             flag:'Flag2',
             workforce: {
-                'upgrader':3
+                'upgrader':1
             },
             links:{
                 from:['5ba22049cb444c51a999611b'],
