@@ -79,6 +79,14 @@ module.exports = {
               remoteHarvester: 3
             }
         },
+        'W12S11': {
+            flag: 'Flag4',
+            defenceStrategy: 'soldier'
+        },
+        'W11S11': {
+            flag: 'Flag10',
+            defenceStrategy: 'soldier'
+        },
         'W14S13': {
           flag: 'Flag9',
           defenceStrategy:'soldier',
