@@ -36,7 +36,7 @@ module.exports = {
                 'upgrader':1
             },
             links:{
-                from:['5ba22049cb444c51a999611b'],
+                from:['5ba22049cb444c51a999611b','5bc3c8581a122211a563a876'],
                 to:'5ba21d0f678e5b460f94737b'
             },
             regions: {
@@ -85,6 +85,9 @@ module.exports = {
         },
         'W11S11': {
             flag: 'Flag10',
+            workforce: {
+              remoteHarvester: 2
+            }
             defenceStrategy: 'soldier'
         },
         'W14S13': {
