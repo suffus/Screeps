@@ -27,7 +27,9 @@ module.exports = {
     create_jobs: function( roomName ) {
         common = require('Common');
         jobs = {};
-        if( common.roomInfo[roomName] != undefined && common.roomInfo[roomName].workforce.remoteHarvester != undefined ) {
+        if( common.roomInfo[roomName] != undefined &&
+            common.roomInfo[roomName].workforce != undefined &&
+            common.roomInfo[roomName].workforce.remoteHarvester != undefined ) {
             var job = {
                 role: this.type,
                 job: this.type + ":" + roomName,
