@@ -8,10 +8,10 @@
  */
 
 module.exports = {
-
     routes: {
         'waywardChugger': {
-          route: [{structure:'5bbb677229aba96c5ba3a620', action:'drain'},
+          route: [
+                {structure:'5bbb677229aba96c5ba3a620', action:'drain'},
                 {structure:'5bbb797b7293b00c84b491cc', action:'withdraw'},
                 {structure:'5bbb76453923961397f214b3', action:'withdraw'}],
           when_full: 0,
@@ -25,9 +25,10 @@ module.exports = {
                     {structure:'5ba22049cb444c51a999611b',action:'drain'}, // CONTAINER
                     {structure:'5ba1ec7126ecb104baa451e0',action:'withdraw'}, // CONTAINER W12S13
                     {structure:'5bbb96916c2e966691e4fd7c',action:'withdraw'},
-                    {structure:'5bbb8cac5405771d9c2add27',action:'withdraw'}
+                    {structure:'5bbb8cac5405771d9c2add27',action:'withdraw'},
+                    {structure:'5ba1ec7126ecb104baa451e0',action:'withdraw'}
                   ],
-                  route_type: 'line',
+                  route_type: 'circle',
                   min: 2,
                   max: 4,
                   priority: 55,
