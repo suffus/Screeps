@@ -15,7 +15,10 @@ module.exports = {
             return ERR_NOT_FOUND;
         }
         for( let lnk_id of roomInfo.links.from) {
-            link = Game.getObjectById( lnk_id )
+            link = Game.getObjectById( lnk_id );
+            if( link.cooldown > 0 ) {
+              continue;
+            }
             if( link != undefined && link.energy > (link.energyCapacity - 100) ) {
                 let linkToRef = roomInfo.links.to;
                 if( Array.isArray( linkToRef ) ) {
