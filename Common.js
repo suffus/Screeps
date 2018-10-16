@@ -81,7 +81,10 @@ module.exports = {
         },
         'W12S11': {
             flag: 'Flag4',
-            defenceStrategy: 'soldier'
+            defenceStrategy: 'soldier',
+            workforce: {
+              remoteHarvester: 2
+            }
         },
         'W11S11': {
             flag: 'Flag10',
