@@ -33,7 +33,7 @@ module.exports = {
         'W12S12':{
             flag:'Flag2',
             workforce: {
-                'upgrader':1
+                'upgrader':3
             },
             links:{
                 from:['5ba22049cb444c51a999611b','5bc3c8581a122211a563a876'],
