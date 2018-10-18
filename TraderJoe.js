@@ -19,6 +19,7 @@ module.exports = {
                                  && Game.market.calcTransactionCost( 1000, x.roomName, trade.roomName ) <= trade.maxCPM );
 
                   console.log( "There are " + validOrders.length + " valid orders");
+                  validOrders.sort( (x,y) => y.price - x.price );
                   for( v of validOrders ) {
                     console.log( v.id + " " + v.price + " " + v.roomName + " " + v.remainingAmount + " " + Game.market.calcTransactionCost( 1000, v.roomName, trade.roomName))
                     if( forReal ) {
