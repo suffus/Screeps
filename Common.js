@@ -111,6 +111,13 @@ module.exports = {
               'spawnRegion': {type:'circle',pos:{x:38,y:38},radius:12}
           }
 
+        },
+        'W15S12': {
+          flag:'Flag11',
+          defenceStrategy: 'soldier',
+          workforce: {
+            upgrader: 1
+          }
         }
     },
 
