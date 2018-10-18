@@ -113,7 +113,7 @@ module.exports = {
 
         },
         'W15S12': {
-          flag:'Flag11',
+          flag:'Flag13',
           defenceStrategy: 'soldier',
           workforce: {
             upgrader: 1
