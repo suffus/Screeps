@@ -32,8 +32,11 @@ module.exports = {
                       console.log("Attempted Trade returned " + err );
                       if( err == 0 ) {
                         amount -= tAmount;
+                        console.log( "Traded " + tAmount + " " + v.resourceType + " at " + v.price + " leaving " + amount );
                         if( amount == 0 ) {
+
                           Memory.trades.shift();
+                          return OK;
                         } else {
                           trade.amount = amount;
                         }
