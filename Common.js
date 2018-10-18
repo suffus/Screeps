@@ -16,7 +16,8 @@ module.exports = {
             flag: 'Flag1',
             map: {
               'storage1':  '5b97c58e57ff3a6290eb0701',
-              'terminal1': '5ba6c8f4518a27074ff93f66'
+              'terminal1': '5ba6c8f4518a27074ff93f66',
+              'linkW12S12': '5b9e98683b50fb23e20a6407'
             },
             workforce: {
                 'upgrader':5
@@ -32,6 +33,10 @@ module.exports = {
         },
         'W12S12':{
             flag:'Flag2',
+            map: {
+              'storage1':'5ba7a7848a5aa7753406ebaf',
+              'terminal1':'5bc28c9b744c156053c71cc7'
+            },
             workforce: {
                 'upgrader':3
             },
