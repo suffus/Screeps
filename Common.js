@@ -116,7 +116,8 @@ module.exports = {
           flag:'Flag13',
           defenceStrategy: 'soldier',
           workforce: {
-            upgrader: 1
+            upgrader: 1,
+            remoteHarvester:1
           }
         }
     },

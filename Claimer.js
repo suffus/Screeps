@@ -35,19 +35,21 @@ module.exports = {
               priority: 5,
               options: {
                 working: true,
-                controller: Memory.claim
+                room: Memory.claim
               },
               body: this.createBody()
             }
         };
       }
-      
+
       return {};
     },
 
     run: function( creep ) {
         common = require('Common');
-        if( Memory.claim == creep.memory.controller ) {
+        if( Memory.claim != undefined ) {
+          creep.memory.targetFlag = common.roomInfo[Memory.claim].flag;
+          creep.memory.room = Memory.claim;
           Memory.claim = undefined;
         }
         if( common.gotoFlag( creep ) < 0 ) {
