@@ -102,7 +102,8 @@ module.exports = {
           flag: 'Flag9',
           defenceStrategy:'soldier',
           map: {
-            'oldStorage':'59fa3212b09d12469bf863ff'
+            'oldStorage':'59fa3212b09d12469bf863ff',
+            'oldTerminal':'59fd6d27caf5222853fd319e'
           },
           workforce: {
             upgrader: 3

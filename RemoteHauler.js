@@ -32,9 +32,28 @@ module.exports = {
 
     run: function( creep ) {
         if( creep.memory.docket == undefined ) {
-          creep.memory.docket = Memory.dockets.shift();
-          if( creep.memory.docket != undefined ) {
+          let docket = Memory.dockets[0];
+          if( docket != undefined ) {
+            let thisOrder = {'from': docket.from, 'to': docket.to, 'resources':{}};
             creep.memory.status = 'collecting';
+            creep.memory.docket = thisOrder;
+            let carryCapacity = _.sum( creep.body, (x) => x == CARRY ? 50 : 0);
+            for( res in docket.resources ) {
+              if( docket.resources[res] >= carryCapacity ) {
+                docket.resources[res] -= carryCapacity;
+                thisOrder.resources[res] = carryCapacity;
+                carryCapacity = 0;
+                break;
+              } else {
+                delete docket.resources[res];
+                thisOrder.resources[res] = docket.resources[res];
+                carryCapacity -= thisOrder.resources[res];
+              }
+            }
+
+            if( carryCapacity <= 0 ) {
+              Memory.dockets.shift();
+            }
           } else {
             creep.memory.status = 'onthebru';
             return;
@@ -42,6 +61,7 @@ module.exports = {
         }
         if( creep.memory.status == 'collecting' ) {
           let src = Game.getObjectById( creep.memory.docket['from'] );
+
           if( src != undefined ) {
             if( creep.pos.getRangeTo( src ) > 1 ) {
               creep.moveTo( src );
