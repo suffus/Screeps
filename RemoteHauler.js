@@ -37,7 +37,7 @@ module.exports = {
             let thisOrder = {'from': docket.from, 'to': docket.to, 'resources':{}};
             creep.memory.status = 'collecting';
             creep.memory.docket = thisOrder;
-            let carryCapacity = _.sum( creep.body, (x) => x == CARRY ? 50 : 0);
+            let carryCapacity = _.sum( creep.body, (x) => x.type == CARRY ? 50 : 0);
             for( res in docket.resources ) {
               if( docket.resources[res] >= carryCapacity ) {
                 docket.resources[res] -= carryCapacity;
