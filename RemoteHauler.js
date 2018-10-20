@@ -48,9 +48,10 @@ module.exports = {
               } else {
                 if( docket.resources[res] > 0 ) {
                   thisOrder.resources[res] = docket.resources[res];
+
+                  carryCapacity -= thisOrder.resources[res];
                 }
                 delete docket.resources[res];
-                carryCapacity -= thisOrder.resources[res];
               }
             }
 
