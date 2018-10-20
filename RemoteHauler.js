@@ -38,6 +38,7 @@ module.exports = {
             creep.memory.status = 'collecting';
             creep.memory.docket = thisOrder;
             let carryCapacity = _.sum( creep.body, (x) => x.type == CARRY ? 50 : 0);
+            console.log("HAULER CC = " + carryCapacity);
             for( res in docket.resources ) {
               if( docket.resources[res] >= carryCapacity ) {
                 docket.resources[res] -= carryCapacity;
@@ -51,7 +52,7 @@ module.exports = {
               }
             }
 
-            if( carryCapacity <= 0 ) {
+            if( _.sum( docket ) == 0 ) {
               Memory.dockets.shift();
             }
           } else {
