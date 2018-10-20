@@ -52,7 +52,7 @@ module.exports = {
               }
             }
 
-            if( _.sum( docket ) == 0 ) {
+            if( _.sum( docket.resources ) == 0 ) {
               Memory.dockets.shift();
             }
           } else {
