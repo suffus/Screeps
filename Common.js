@@ -58,6 +58,10 @@ module.exports = {
         'W11S13': {
             flag:'Flag5',
             defenceStrategy:'soldier',
+            map: {
+              'container1':'5bce0c2d380292605e2809a7',
+              'container2':''
+            },
             workforce: {
                 remoteHarvester : 1
             }
