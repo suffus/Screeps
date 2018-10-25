@@ -51,6 +51,16 @@ module.exports = {
           priority: 30,
           spawns: ['5bb90ff83f0d7d0acfa25762'],
           size: 1300
+        },
+        'linker': {
+          route:[{structure:'5ba7a7848a5aa7753406ebaf',action:'withdraw'},
+                 {structure:'5b9e98683b50fb23e20a6407',action:'drain'}],
+          route_type:'circle',
+          min: 1,
+          max: 1,
+          priority: 30,
+          spawns: ['5ba40623f3b35a19ddad4dca','5bc370925ec1822676bd93a3'],
+          size: 1100
         }
     },
     type: 'energyTrain',
