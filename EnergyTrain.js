@@ -23,8 +23,8 @@ module.exports = {
         },
         'barracksPuffer': { route:[
                     {structure:'5ba22049cb444c51a999611b',action:'drain'}, // LINK
-                    {structure:'5ba1ec7126ecb104baa451e0',action:'withdraw'}, // CONTAINER W12S13
-                    {structure:'5bce0c2d380292605e2809a7',action:'withdraw'}
+                    {structure:'5bd9af41c37e352b7199f136',action:'withdraw'}, // CONTAINER W12S13
+                    {structure:'5bd9e5a5f18c322b9940245f',action:'withdraw'}
                   ],
                   route_type: 'circle',
                   min: 2,
