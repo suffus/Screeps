@@ -20,11 +20,11 @@ module.exports = {
               'linkW12S12': '5b9e98683b50fb23e20a6407'
             },
             workforce: {
-                'upgrader':5
+                'upgrader':1
             },
             links: {
-                from:['5b9e98683b50fb23e20a6407','5bbb677229aba96c5ba3a620'],
-                to:['5b9962df0417171556aa9ec4','5bbcf773a18f0c54ed2f14e4']
+                from:['5bbb677229aba96c5ba3a620','5bbcf773a18f0c54ed2f14e4'],
+                to:['5b9e98683b50fb23e20a6407','5b9962df0417171556aa9ec4']
             },
             regions: {
                 'spawnRegion': {type:'circle',pos:{x:12,y:8},radius:12},

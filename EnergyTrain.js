@@ -53,8 +53,8 @@ module.exports = {
           size: 1300
         },
         'linker': {
-          route:[{structure:'5ba7a7848a5aa7753406ebaf',action:'withdraw'},
-                 {structure:'5b9e98683b50fb23e20a6407',action:'drain'}],
+          route:[{structure:'5ba7a7848a5aa7753406ebaf',action:'deposit'},
+                 {structure:'5b9e98683b50fb23e20a6407',action:'withdraw'}],
           route_type:'circle',
           min: 1,
           max: 1,
