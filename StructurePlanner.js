@@ -7,14 +7,29 @@
  * mod.thing == 'a thing'; // true
  */
 
+const common = require('Common')
+
 module.exports = {
     runRoom: function( room ) {
-        common = require('Common');
-        if( Math.random() < 0.2 ) {
+        if( Math.random() < 0.1 ) {
             if( Game.rooms[room] == undefined ) { ///// no structures there
                 return;
             }
             structures = Game.rooms[room].find( FIND_STRUCTURES )
+            if( Memory.rooms === undefined ) {
+                Memory.rooms = {}
+            }
+            if( Memory.rooms[room] == undefined ) {
+                Memory.rooms[room] = {
+                    structures: []
+                }
+            }
+            Memory.rooms[room].structures=[]
+            for( s of structures ) {
+                Memory.rooms[room].structures.push( {type: s.structureType, pos: {x: s.pos.x, y: s.pos.y}, id: s.id})
+            }
+            Memory.rooms[room].structures = Memory.rooms[room].structures.sort( (x,y) => common.comparePos(x.pos, y.pos) )
+
             repair_structures_urgent = structures.filter( (x) => x.structureType != STRUCTURE_WALL
                   && x.structureType != STRUCTURE_RAMPART && x.hits/x.hitsMax < 0.6
                   && Memory.deprecatedStructures[x.id] == undefined )

@@ -9,10 +9,18 @@
 
 module.exports = {
     type: 'repairer',
-    min: function() {return 2;},
-    max: function() {return Math.ceil(3 + Object.values(Memory.urgentRepairs).length / 4);},
-    max_energy: function() {return 1200;},
-    work_sequence: function() {return ['brickie'];},
+    min: function() {return 0;},
+    max: function() {
+        if( Memory.urgentRepairs !== undefined && Object.values( Memory.urgentRepairs ).length > 0 ) {
+            return Math.ceil(3 + Object.values(Memory.urgentRepairs).length / 4);
+
+        } else {
+            return 3;
+        }
+    },
+    min_energy: function() {return 800},
+    max_energy: function() {return 1000;},
+    work_sequence: function() {return ['builder'];},
 
     findPoorStructures: function( ) {
         o_out = []
@@ -27,7 +35,7 @@ module.exports = {
                 continue;
             }
             if( (struct.hits / struct.hitsMax) < 0.9 ) {
-                console.log("pushing " + struct)
+                console.log("pushing poor structure " + JSON.stringify(struct))
                 o_out.push( struct )
             }
         }
@@ -45,8 +53,9 @@ module.exports = {
         //return o_out;
     },
 
-    run: function(creep) {
+    run: function(creep, shouldNotBuild) {
         var roleBrickie = require('Brickie');
+        var roleBuilder = require('Builder');
         var roleUpgrader = require('TopUp');
         var common = require('Common');
         // if creep is trying to repair something but has no energy left
@@ -69,10 +78,13 @@ module.exports = {
             if( Memory.urgentRepairs != undefined ) {
                 urgents = _.filter( Memory.urgentRepairs, (x,y) => x != undefined ? x.repairer == creep.name : false );
             }
-
+            let structure
+            if( creep.memory.currentTarget ) {
+                structure = Game.getObjectById( creep.memory.currentTarget )
+            }
             if( urgents[0] != undefined ) {
                 structure = Game.getObjectById(urgents[0].id)
-            } else {
+            } else if( !structure ) {
                 structure = creep.pos.findClosestByPath(FIND_STRUCTURES, {
                 // the second argument for findClosestByPath is an object which takes
                 // a property called filter which can be a function
@@ -82,24 +94,38 @@ module.exports = {
             }
 
             // if we find one
-            if (structure != undefined) {
+            if (structure) {
+                creep.memory.currentTarget = structure.id
                 // try to repair it, if it is out of range
-                if (creep.repair(structure) == ERR_NOT_IN_RANGE) {
+                let err
+                if ((err = creep.repair(structure)) == ERR_NOT_IN_RANGE) {
                     // move towards it
+                    creep.memory.firstOK = false
                     creep.moveTo(structure);
                     console.log(creep.name + " looking to repair structure " + structure + " at " + structure.pos)
+                } else {
+                    if( err == OK && !creep.memory.firstOK ) {
+                        creep.memory.firstOK = true
+                        let pos = common.findClearSquare( structure, 1 )
+                        creep.memory.repairFrom = pos || creep.pos
+                    }
+                    if( creep.pos.getRangeTo( creep.memory.repairFrom ) > 0 ) {
+                        creep.moveTo( pos )
+                    }
+                    if( structure.hitsMax - structure.hits === 0 ) {
+                        creep.memory.currentTarget = undefined
+                    }
                 }
             } else {
                 console.log( creep.name + " cannot find anything to repair! " + creep.pos.roomName)
-                if( creep.pos.roomName != common.home ) {
-                    creep.memory.targetFlag = 'Flag1';
-                    return;
+                if( !shouldNotBuild ) {
+                    roleBuilder.run( creep, true );
                 }
             }
         }
             // if creep is supposed to get energy
         else {
-           common.fillHerUp( creep );
+            common.fillHerUp( creep );
         }
     }
 };

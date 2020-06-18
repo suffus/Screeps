@@ -7,11 +7,13 @@
  * mod.thing == 'a thing'; // true
  */
 
+const common = require('Common')
+
 module.exports = {
     type: 'harvester',
     min: function( ) {return 2;},
-    max: function( ) {return 2;},
-    min_energy: function() {return 800;},
+    max: function( ) {return 3;},
+    min_energy: function() {return 600;},
     max_energy: function() {return 800;},
     work_sequence: function() {return ['slacker'];},
 
@@ -27,11 +29,13 @@ module.exports = {
                 role: this.type,
                 job: this.type + ":" + roomName,
                 min: 1,
-                max: 2,
+                max: 3,
                 spawns: _.map( spawns, (x) => x.id ),
                 options: {room:roomName},
                 scaleable: false,
-                body: [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE],
+                bodySmall: [WORK,WORK,CARRY,MOVE],
+                body: [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE],
+                bodyLarge: [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE],
                 priority: 99
             };
             rV = {};
@@ -50,7 +54,6 @@ module.exports = {
     },
 
     createBody: function( energy, spawn, options ) {
-        common = require('Common');
         if( options == undefined && energy > 800 ) {
             energy = 800;
         }
@@ -69,10 +72,12 @@ module.exports = {
     },
 
     getTargetStructure: function( creep ) {
+        let fillStructures = ((common.roomInfo[creep.pos.roomName] || {}).fillStructures || {})
       var structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
          filter: (s) => (s.structureType == STRUCTURE_SPAWN
                       || s.structureType == STRUCTURE_EXTENSION
-                      || s.structureType == STRUCTURE_TOWER)
+                      || s.structureType == STRUCTURE_TOWER
+                      || fillStructures[s.id] !== undefined)
                       && s.energy < s.energyCapacity
                       && s.pos.roomName == creep.memory.room
      });
@@ -80,16 +85,16 @@ module.exports = {
     },
 
     run: function( creep ) {
-        common=require('Common');
 
         if( common.gotoFlag( creep ) == ERR_BUSY ) {
             return;
         }
 
         if( common.checkWorking( creep ) == true ) {
-             var structure = this.getTargetStructure( creep );
-            if( structure == undefined ) {
-                console.log('Harvester '+ creep.name + ' storing energy');
+             //console.log('Harvester '+ creep.name + ' storing energy');
+            var structure = this.getTargetStructure( creep );
+            if( structure === undefined || structure === null) {
+                console.log('Harvester '+ creep.name + ' trying to store energy in a storage');
                 structure = creep.pos.findClosestByPath( FIND_STRUCTURES, {
                     filter: (s) => s.structureType == STRUCTURE_STORAGE && s.pos.roomName == creep.memory.room
                 });
@@ -104,7 +109,8 @@ module.exports = {
                     console.log('Harvester received '+ err + ' while trying to transfer stuff to ' + structure)
                 }
             } else {
-                spawns = Game.rooms[creep.memory.room].find( FIND_MY_STRUCTURES, (x) => x.structureType == STRUCTURE_SPAWN );
+                let rN = creep.memory.room || creep.pos.roomName;
+                spawns = Game.rooms[rN].find( FIND_MY_STRUCTURES, (x) => x.structureType == STRUCTURE_SPAWN );
                 spawn = spawns[0];
                 if( creep.pos.getRangeTo( spawn ) > 2 ) {
                     creep.moveTo( spawn );
@@ -112,6 +118,7 @@ module.exports = {
                 return;
             }
         } else {
+            // console.log('Harvester '+ creep.name + ' acquiring');
             if( creep.pos.roomName != creep.memory.room ) {
                 if( creep.memory.room != undefined ) {
                     creep.moveTo( common.roomInfo[creep.memory.room].flag );
@@ -122,13 +129,11 @@ module.exports = {
                 creep.memory.working = true;
                 return;
             }
-            err = common.fillHerUp( creep, undefined, undefined, function(x) {
-                    return common.isInRegion( x.pos, 'spawnRegion' ) &&
-                            x.pos.roomName == creep.memory.room;
-              });
-            if( err = ERR_NOT_ENOUGH_RESOURCES ) {
+            err = common.fillHerUp( creep )
+            if( err == ERR_NOT_ENOUGH_RESOURCES ) {
               console.log( "NO SOURCES FOR HARVESTER " + creep.name );
-            } else {
+              ///// allocate a source
+            } else if( err !== ERR_NOT_IN_RANGE ) {
               console.log( "FILLHERUP RETURNED " + err + " FOR HARVESTER " + creep.name);
             }
         }

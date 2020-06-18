@@ -24,5 +24,13 @@ module.exports = {
       }
     }
     Memory.dockets.push( job );
+  },
+  getRoomInfo: function( roomName ) {
+      const raw = (new Room.Terrain( roomName )).getRawBuffer()
+      //console.log(JSON.stringify(raw))
+      const look = (new Room(roomName)).lookForAtArea(LOOK_STRUCTURES,0,0,50,50);
+      console.log( JSON.stringify( look ) )
+      Memory.lastRoomInfo = look
   }
+
 }

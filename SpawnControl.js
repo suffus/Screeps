@@ -40,6 +40,7 @@ module.exports = {
         _.map( Memory.creep_sched, (x) => sched_by_job[x.job]++ );
 
         for( let creepJob in plan ) {
+
             let s = plan[creepJob];
             let s_min = s.min > 0 ? s.min : 1;
             let s_max = s.max > 0 ? s.max : 1;
@@ -112,20 +113,21 @@ module.exports = {
 
         for( c of cS ) {
             energyRequired = common.calculateBodyCost( c.body );
+            console.log("Trying to spawn "+c.job)
             for( s_id in spawnInfo ) {
                 s = Game.getObjectById( s_id );
                 if( spawnInfo[s_id] == undefined ) {
                     console.log( "No Spawn " + s_id);
                     continue;
-                } 
+                }
                 energyAvailable = spawnInfo[s_id].energy;
                 energyCapacity = spawnInfo[s_id].energyCapacity;
                 spawns_available = true;
-                console.log( "Spawn energy available/capacity/required for " + s.name +
+                console.log( "Spawn energy available/capacity/required for " + s.name + " " + c.job + " " +
                             " = " + energyAvailable + "/" +
                             energyCapacity + "/" + energyRequired);
                 if( energyCapacity < energyRequired ) {
-                    console.log( "Not enough energy in Spawn")
+                    console.log( "Not enough energy in Spawn for "+c.job)
                     continue;    ///// NOT THIS ONE
                 }
                 if( c.spawns == undefined || _.filter( c.spawns, (x) => x == s.id).length > 0 ) {

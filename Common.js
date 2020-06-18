@@ -9,124 +9,114 @@
 
 module.exports = {
 
-
-    home: 'W13S12',
+    home: 'E8S21',
     roomInfo: {
-        'W13S12':{
-            flag: 'Flag1',
-            map: {
-              'storage1':  '5b97c58e57ff3a6290eb0701',
-              'terminal1': '5ba6c8f4518a27074ff93f66',
-              'linkW12S12': '5b9e98683b50fb23e20a6407'
-            },
+        'E8S21': {
+            flag:'Flag1',
+            defenceStrategy:'soldier',
             workforce: {
-                'upgrader':1
+                harvester : 2,
+                upgrader: 3,
+                builder: 2,
+                repairer: 1,
+                brickie: 1
             },
+            upgraderSource: '5ee6d5a972b57d67f2949fc3',
+            workforcePlanB: [{harvester:2},{harvester:2,builder:1},{harvester:2,builder:1,upgrader:1}],
+            regions: {
+                spawnRegion: {type: 'circle', pos: {x:21, y:21}, radius:10}
+            },
+            reservedStructures: {'5ee6d5a972b57d67f2949fc3': ['upgrader']},
             links: {
-                from:['5bbb677229aba96c5ba3a620','5bbcf773a18f0c54ed2f14e4'],
-                to:['5b9e98683b50fb23e20a6407','5b9962df0417171556aa9ec4']
-            },
-            regions: {
-                'spawnRegion': {type:'circle',pos:{x:12,y:8},radius:12},
-                'controllerRegion': {type:'circle',pos:{x:30,y:40},radius:10}
+                'from':['5ee836388e5ccb95635224fa'],
+                to:['5ee87f151be94edefc6ccd3a']
             }
-        },
-        'W12S12':{
-            flag:'Flag2',
-            map: {
-              'storage1':'5ba7a7848a5aa7753406ebaf',
-              'terminal1':'5bc28c9b744c156053c71cc7'
-            },
-            workforce: {
-                'upgrader':3
-            },
-            links:{
-                from:['5ba22049cb444c51a999611b','5bc3c8581a122211a563a876'],
-                to:'5ba21d0f678e5b460f94737b'
-            },
-            regions: {
-                spawnRegion: {type: 'circle', pos: {x: 10, y: 10}, radius: 10}
-            }
-        },
-        'W12S13': {
-            flag:'Flag3',
-            defenceStrategy:'soldier',
-            workforce: {
-                remoteHarvester : 1
-            }
-        },
-        'W11S13': {
-            flag:'Flag5',
-            defenceStrategy:'soldier',
-            map: {
-              'container1':'5bce0c2d380292605e2809a7',
-              'container2':''
-            },
-            workforce: {
-                remoteHarvester : 1
-            }
-        },
-        'W11S12': {
-            flag: 'Flag6',
-            defenceStrategy:'soldier',
-            workforce: {
-                remoteHarvester : 2
-            }
-        },
-        'W11S14': {
-            flag:'Flag7',
-            defenceStrategy:'soldier',
-            workforce: {
-                remoteHarvester:1
-            }
-        },
-        'W14S12': {
-            flag: 'Flag8',
-            reserve: true,
-            defenceStrategy: 'soldier',
-            workforce: {
-              remoteHarvester: 3
-            }
-        },
-        'W12S11': {
-            flag: 'Flag4',
-            defenceStrategy: 'soldier',
-            workforce: {
-              remoteHarvester: 2
-            }
-        },
-        'W11S11': {
-            flag: 'Flag10',
-            workforce: {
-              remoteHarvester: 2
-            },
-            defenceStrategy: 'soldier'
-        },
-        'W14S13': {
-          flag: 'Flag9',
-          defenceStrategy:'soldier',
-          map: {
-            'oldStorage':'59fa3212b09d12469bf863ff',
-            'oldTerminal':'59fd6d27caf5222853fd319e'
-          },
-          workforce: {
-            upgrader: 3
-          },
-          regions: {
-              'spawnRegion': {type:'circle',pos:{x:38,y:38},radius:12}
-          }
 
         },
-        'W15S12': {
-          flag:'Flag13',
-          defenceStrategy: 'soldier',
-          workforce: {
-            upgrader: 1,
-            remoteHarvester:1
-          }
+        'E8S22' : {
+            flag: 'Flag2',
+            workforce: {
+                remoteHarvester: 1,
+                reserver: 1
+            }
+        },
+        'E8S23' : {
+            flag: 'Flag3'
         }
-    },
+     },
 
+     findClearSquare: function( target, range ) {
+        let square = this.getLocalData( target, range )
+        for( let s of Object.values(square) ) {
+            if( s.structures.length === 0 && (s.terrain & (TERRAIN_MASK_LAVA|TERRAIN_MASK_WALL|TERRAIN_MASK_SWAMP)) == 0) {
+                return s.pos
+            }
+        }
+        return undefined
+     },
+
+     getLocalData: function( pos, delta ) {
+         if( pos.pos !== undefined ) {
+             pos = pos.pos
+         }
+         const terrain = new Room.Terrain( pos.roomName );
+         let rV = {}
+         for( let i = -delta; i<=delta; i++ ) {
+             for( let j = -delta; j<delta; j++ ) {
+                 if( i+delta >= 1 && i+delta <=48 && j+delta >= 1 && j+delta <= 48 ) {
+                     let terra = terrain.get(i+delta,j+delta)
+                     let pPos = new RoomPosition( i+delta, j+delta, pos.roomName )
+                     let point = {
+                         pos: pPos,
+                         terrain: terrain.get( i+delta, j+delta ),
+                         structures: this.findStruct( pPos )
+                     }
+                     rV[pPos] = point
+
+                 }
+
+             }
+         }
+         return rV
+
+     },
+
+     comparePos: function( pos1, pos2 ) {
+         let dX = pos1.x - pos2.x
+         if( dX != 0 ) {
+             return dX
+         }
+         return pos1.y - pos2.y
+     },
+
+    findStruct: function( pos ) {
+        let sA = Memory.rooms[pos.roomName]
+        if( sA !== undefined && sA.length > 0 ) {
+            if( this.comparePos(sA[0].pos, pos ) > 0 ) {
+                return []
+            }
+            let lo = 0
+            let hi = sA.length-1
+            let dP = 0
+            while( lo < hi ) {
+                let mid = Math.floor((lo + hi)/2)
+                dP = this.comparePos( sA[mid].pos, pos )
+                if( dP < 0  ) {  /// mid is strictly before pos
+                    lo = mid+1
+                } else {
+                    hi = mid
+                }
+            }
+
+            let rV = []
+            while( lo < sA.length && this.comparePos( sA[lo].pos, pos ) === 0 ) {
+                rV.push( sA[lo].structure )
+                lo++
+            }
+            return rV
+        }
+        return []
+    },
 
     createWorkerBody: function( energyAvailable ) {
         if( energyAvailable == 300 )  {
@@ -143,6 +133,27 @@ module.exports = {
         'work':100,'carry':50,'move':50,'attack':80,'ranged_attack':150,'tough':10,'heal':250,'claim':600
     },
 
+    isBlockingSource( creep ) {
+          sources = Game.rooms[creep.pos.roomName].find( FIND_SOURCES )
+          for( let s of sources ) {
+              if( creep.pos.getRangeTo( s ) === 1   ) {
+                  console.log( "Creep " + creep.name + " is blocking source" )
+                  return true
+              }
+          }
+          return false
+    },
+
+    findRoomEnergySource( roomName ) {
+        sources = Game.rooms[roomName].find(FIND_SOURCES);
+        let rnd = Math.floor(Math.random() * sources.length)
+        if( sources.length === 0  ) {
+            console.log("** No sources found in " + roomName)
+        }
+        let rV = sources[rnd].id
+        //console.log("Returning source id " + rV )
+        return rV
+    },
 
     createBody: function( bodyPrototype, energyAvailable ) {
         let bodyPartCost = this.bodyPartCost;
@@ -263,7 +274,7 @@ module.exports = {
             creep.memory.working = true;
         }
 
-        if (creep.memory.working == true && creep.carry.energy == 0) {
+        if (creep.memory.working == true && creep.store[RESOURCE_ENERGY] == 0) {
             // switch state
 
             creep.memory.working = false;
@@ -273,7 +284,9 @@ module.exports = {
             // switch state
             creep.memory.working = true;
             creep.memory.sourceTarget = undefined;
-            creep.moveTo( Game.flags.Flag2); // move away from source
+            if( creep.memory.role !== "dedicated_harvester" && !creep.memory.heavyVehicle ) {
+                creep.moveTo( Game.flags.Flag2); // move away from source
+            }
         }
         return creep.memory.working;
     },
@@ -286,15 +299,37 @@ module.exports = {
         creep.memory.sourceTarget = sourceID;
     },
 
+    isAvailableAsSupply: function( creep, structure ) {
+        let info = this.roomInfo[ structure.pos.roomName ]
+        if( !info || !info.reservedStructures || !info.reservedStructures[structure.id]) {
+            return true
+        }
+        for( let r of info.reservedStructures[structure.id]) {
+            if( r === creep.memory.role ) {
+                return true
+            }
+        }
+        if( info.reservedStructures[structure.id].filter( (x) => {creep.memory.role == x}).length > 0) {
+            return true
+        }
+        return false
+    },
+
     fillHerUp: function( creep, sourceID_in, roomName, sourceFilter ) {
+        let canWork = false
+        creep.body.map( (x) => {if( x.type == WORK && x.hits > 0 ){canWork = true}} )
+        if( creep.memory.role === "harvester" ) {
+            canWork = false;
+        }
+
         if( creep.carry.energy == creep.carryCapacity ) {
             return ERR_FULL;
         }
         var sourceID = sourceID_in;
-        if( sourceID == undefined ) {
+        if( sourceID === undefined ) {
             sourceID = creep.memory.sourceTarget;
         }
-
+        console.log("Source ID = " + sourceID )
         var source = undefined;
         if( sourceID != undefined ) {
             source = Game.getObjectById( sourceID );
@@ -302,6 +337,7 @@ module.exports = {
                 console.log("**** source dissapeared for "+sourceID);
                 source = undefined;
             } else {
+                console.log("Found Source")
                 if( sourceID_in == undefined && (source.energy != undefined && source.energy == 0) || (source.store != undefined && source.store[RESOURCE_ENERGY] == 0)) {
                     source = undefined;
                 }
@@ -311,16 +347,17 @@ module.exports = {
         var source_container, source_source, source_dropped, source_tombstone, source_link, source_storage;
         if( source == undefined ) {
             source_container = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-                filter: function(x) {
-                        return (x.structureType == STRUCTURE_CONTAINER &&
-                        x.store[RESOURCE_ENERGY] > 0);
+                filter: (x) => {
+                        return (x.structureType == STRUCTURE_CONTAINER
+                        && this.isAvailableAsSupply( creep, x )
+                        && x.store[RESOURCE_ENERGY] > 0);
                     }
             });
-            if( (creep.memory.role != 'harvester' && creep.memory.role != 'upgrader') && creep.pos.roomName == this.home) {
+            if( (canWork && creep.memory.role != 'upgrader') && creep.pos.roomName == this.home) {
               //  source_container = undefined;
             }
 
-            if( creep.memory.role != 'harvester') {
+            if( canWork ) {
                 source_source = creep.pos.findClosestByPath( FIND_SOURCES_ACTIVE );
             }
             source_dropped = creep.pos.findClosestByPath( FIND_DROPPED_RESOURCES, {
@@ -341,11 +378,27 @@ module.exports = {
                     filter: (x) => x.structureType == STRUCTURE_STORAGE && x.store.energy > 0
                 });
             };
-            sources = _.filter( [source_container,source_source,source_dropped,source_tombstone,source_link], function(x) {return x!=undefined;})
+            sources = _.filter( [source_container,source_dropped,source_tombstone,source_link], function(x) {return x!=undefined;})
             if( sourceFilter != undefined ) {
                 sources = _.filter( sources, sourceFilter )
+                ss_a = _.filter( [source_source], sourceFilter)
+                if( ss_a.length == 0 ) {
+                    source_source = undefined
+                }
             }
             source = creep.pos.findClosestByPath( sources );
+            if( source_source ) {
+                if( source ) {
+                    let d1 = creep.pos.getRangeTo( source_source )
+                    let d2 = creep.pos.getRangeTo( source )
+                    if( d2 - d1 > 5 ) {
+                        source = source_source
+                    }
+                } else {
+                    source = source_source
+
+                }
+            }
             if( (source == undefined || creep.pos.getRangeTo(source) > 20)  && source_storage != undefined ) {
                 source = source_storage;
             }
@@ -388,10 +441,10 @@ module.exports = {
            //console.log( "err1=" + err1 + ", err2="+err2);
         } else {
             console.log("No sources for "+creep.name);
-            source = Game.getObjectById( creep.memory.allocatedSource );
+            source = Game.getObjectById( creep.memory.allocatedSource || creep.memory.sourceTarget );
             if( source != undefined ) {
                 creep.moveTo( source );
-                return ERR_NOT_ENOUGH_RESOURCES;
+                return ERR_NOT_IN_RANGE;
             } else {
                 return ERR_NOT_ENOUGH_RESOURCES;
             }

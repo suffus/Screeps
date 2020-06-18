@@ -10,7 +10,7 @@
 module.exports = {
     type: 'claimer',
     min: function() {return 0;},
-    max: function() {return 0;},
+    max: function() {return 1;},
     work_sequence: function() {return ['upgrader'];},
     createBody: function( e, spawn, options ) {
         return [CLAIM,MOVE,MOVE,MOVE,MOVE];
@@ -25,9 +25,9 @@ module.exports = {
     },
 
     create_all_jobs: function() {
+        let jobs = {};
       if( Memory.claim != undefined ) {
-        return {
-            'claimer': {
+        jobs['claimer'] = {
               min:1,
               max:1,
               job: 'claimer',
@@ -35,40 +35,71 @@ module.exports = {
               priority: 5,
               options: {
                 working: true,
+                task: 'claimer',
                 room: Memory.claim
               },
               body: this.createBody()
-            }
-        };
-      }
+            };
+        }
 
-      return {};
+        for( let rm in common.roomInfo ) {
+            if( common.roomInfo[rm].workforce.reserver !== undefined ) {
+                jobs['reserver:'+rm]= {
+                    min:1,
+                    max:1,
+                    job: 'reserver:'+rm,
+                    role: 'claimer',
+                    priority:10,
+                    options: {
+                        working: true,
+                        task: 'reserver',
+                        room: rm
+                    },
+                    body: this.createBody()
+                }
+            }
+        }
+
+        return jobs;
     },
 
     run: function( creep ) {
         common = require('Common');
-        if( Memory.claim != undefined ) {
-          creep.memory.targetFlag = common.roomInfo[Memory.claim].flag;
-          creep.memory.room = Memory.claim;
-          Memory.claim = undefined;
+        if( creep.memory.room !== undefined && creep.memory.room !== creep.pos.roomName) {
+          creep.memory.targetFlag = common.roomInfo[creep.memory.room].flag;
         }
         if( common.gotoFlag( creep ) < 0 ) {
-          return;
+          return ERR_NOT_IN_RANGE
         }
-
+        if( creep.memory.controller === undefined ) {
+            let cS = Game.rooms[creep.memory.room].find( FIND_STRUCTURES, (x) => x.structureType === STRUCTURE_CONTROLLER );
+            if( cS.length > 0 ) {
+                creep.memory.controller = cS[0].id
+            } else {
+                console.log("***** Claimer "+creep.name+" cannot locate a controller in "+creep.pos.roomName)
+                return ERR_NOT_FOUND
+            }
+        }
         if( creep.memory.controller != undefined ) {
-            controller = Game.getObjectById( creep.memory.controller );
-            if( (e=creep.claimController( controller )) == ERR_NOT_IN_RANGE) {
+             controller = Game.getObjectById( creep.memory.controller );
+             if( creep.memory.task === "reserver") {
+                 if((e = creep.reserveController( controller )) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo( controller )
+                    return e
+                 }
+            } else if( (e=creep.claimController( controller )) == ERR_NOT_IN_RANGE) {
                 creep.moveTo( controller );
-                return;
+                return e
             }
             if( e < 0 ) {
                 console.log( creep.name + " got error " + e + " trying to claim controller");
             } else {
                 console.log( creep.name + " has claimed controller!")
             }
+            return e
         } else {
             console.log( "Claimer " + creep.name + " awaits a claim instruction");
+            return ERR_NOT_FOUND
         }
     }
 

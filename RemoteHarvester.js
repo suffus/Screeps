@@ -10,11 +10,11 @@
 module.exports = {
     common: require('Common'),
     type: 'remoteHarvester',
-    min: function() {return 4;},
-    max: function() {return 7;},
-    max_energy: function() {return 1400;},
-    min_energy: function() {return 1400;},
-    spawn: function() {return Game.spawns.Spawn2;},
+    min: function() {return 1;},
+    max: function() {return 1;},
+    max_energy: function() {return 1700;},
+    min_energy: function() {return 1000;},
+    spawn: function() {return Game.spawns.Spawn1;},
     work_sequence: function() {return ['upgrader'];},
 
     force_convert: function( creep, remote ) {
@@ -157,7 +157,7 @@ module.exports = {
     },
 
     createBody: function( eA ) {
-        bodyTemplate=[{part:WORK,quantity:10}, {part:CARRY,quantity:10}, {part:MOVE,quantity:10}];
+        bodyTemplate=[{part:WORK,quantity:10}, {part:CARRY,quantity:6}, {part:MOVE,quantity:8}];
         body = require('Common').createBody( bodyTemplate, eA );
         return body;
     },

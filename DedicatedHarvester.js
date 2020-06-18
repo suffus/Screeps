@@ -10,8 +10,8 @@
 module.exports = {
     type: 'dedicated_harvester',
     min: function() {return 2;},
-    max: function() {return 2;},
-    min_energy: function() {return 1200;},
+    max: function() {return 10;},
+    min_energy: function() {return 300;},
     max_energy: function() {return 1200;},
     work_sequence: function() {return ['slacker'];},
     getTarget: function( room ) {
@@ -60,7 +60,9 @@ module.exports = {
                 options: {
                     source: sources[s].id
                 },
-                body: [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE],
+                body: [WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,MOVE],
+                body750: [WORK,WORK,WORK,WORK,WORK,WORK,CARRY,MOVE,MOVE],
+                body2: [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE],
                 spawns: _.map( spawns, (x) => x.id )
             };
             rV[sH.job] = sH;
@@ -76,9 +78,36 @@ module.exports = {
         }
         return common.createBody( bodyT, energy );
     },
+
+    getContainer: function( creep ) {
+            var containers = _.filter( _.map(Game.structures, (x,y) => x), (x) => (x.structureType == STRUCTURE_CONTAINER) &&
+                                                                                                _.sum(x.store) < x.storeCapacity );
+
+            var structure = creep.pos.findClosestByPath( FIND_STRUCTURES, {
+                filter: (x) => x.structureType == STRUCTURE_CONTAINER && _.sum( x.store ) < x.storeCapacity
+            });
+
+          src = Game.getObjectById( creep.memory.options.sourceId )
+    },
     ///// THIS IS THE GITHUB VERSION!
+    moveAway: function( creep ) {
+               // creep.moveTo( common.roomInfo[creep.pos.roomName].flag );
+               console.log("DediH Trying To Move")
+                creep.moveTo( Game.spawns.Spawn1)
+                creep.memory.moveAway--
+                if( creep.memory.moveAway <= 0 ) {
+                     creep.drop( RESOURCE_ENERGY, creep.store[RESOURCE_ENERGY] )
+                }
+    },
+
+
     run: function( creep ) {
         common=require('Common');
+
+        if( creep.memory.moveAway > 0 ) {
+            this.moveAway( creep );
+            return OK;
+        }
 
         if( common.checkWorking( creep ) == true ) {
             var containers = _.filter( _.map(Game.structures, (x,y) => x), (x) => (x.structureType == STRUCTURE_CONTAINER) &&
@@ -88,26 +117,26 @@ module.exports = {
                 filter: (x) => x.structureType == STRUCTURE_CONTAINER && _.sum( x.store ) < x.storeCapacity
             });
             console.log("Dedi "+creep.name + " transferring energy to " + structure + " of " + containers)
-            if( structure != undefined ) {
+            if( structure != undefined && creep.pos.getRangeTo( structure ) < 10) {
                 if( creep.transfer( structure, RESOURCE_ENERGY ) == ERR_NOT_IN_RANGE ) {
                     creep.moveTo( structure );
                 }
                 return OK;
             } else {
-                // drop it nearby
-                hvst = creep.pos.findClosestByPath( _.filter( Game.creeps, (x) => x.memory.role == 'harvester') );
-                if( hvst != undefined ) {
-                    if( creep.transfer( hvst, RESOURCE_ENERGY ) == ERR_NOT_IN_RANGE ) {
-                        creep.moveTo( hvst );
-                    }
+                // drop it here
+                if( creep.store[RESOURCE_ENERGY] > 0 && creep.memory.moveAway == 0 ) {
+                    creep.memory.moveAway = 3
+                    this.moveAway( creep )
                 }
+                return OK;
             }
         } else {
             source = Game.getObjectById( creep.memory.source );
-            if( creep.harvest( source) < 0 ) {
+            let err = creep.harvest( source )
+            if( err === ERR_NOT_IN_RANGE ) {
                 creep.moveTo( source );
             }
-            return ERR_NOT_ENOUGH_ENERGY;
+            return err;
         }
     }
 };

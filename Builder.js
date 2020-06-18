@@ -7,29 +7,41 @@
  * mod.thing == 'a thing'; // true
  */
 
+const common = require('Common')
+const repairer = require('Repairer')
+
 module.exports = {
     type: 'builder',
-    min: function() {return 0;},
+    min: function() {return 1;},
     max: function() {
       let reqE = _.sum( Game.constructionSites, (x) => (x.progressTotal - x.progress) );
-      let nB = Math.ceil( reqE/30000 );
-      if( nB > 4 ) {
-        return 4;
+      let nB = Math.ceil( reqE/3000 );
+      if( nB > 3 ) {
+        return 3;
       } else {
         return (nB == 0 ? (reqE > 0 ? 1 : 0) : nB)
       }
     },
     max_energy: function() {return 1200;},
+    createBody: function( eE ) {
+        if( eE < 500 ) {
+            return [WORK,WORK,CARRY,MOVE]
+        }
+        if( eE <= 800 ) {
+            return [WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE]
+        }
+        return [WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE]
+    },
 
-   run: function( creep ) {
-       repairer = require('Repairer');
-       common = require('Common');
+   run: function( creep, shouldNotRepair ) {
 
        if( common.gotoFlag( creep ) < 0 ) {
             return;
         }
 
+
         if( common.checkWorking( creep ) == true ) {
+            //console.log("Builder Working")
             let constructionSite;
             if( (creep.memory.current_site == undefined) ||
                 (constructionSite = Game.getObjectById( creep.memory.current_site )) == undefined ||
@@ -47,9 +59,9 @@ module.exports = {
                   }
             }
             if (constructionSite != undefined) {
-                console.log( creep.name + " going to construct " + constructionSite)
+                //console.log( creep.name + " going to construct " + constructionSite)
                 // try to build, if the constructionSite is not in range
-                if ((rv = creep.build(constructionSite)) == ERR_NOT_IN_RANGE) {
+                if ((rv = creep.build(constructionSite)) == ERR_NOT_IN_RANGE || common.isBlockingSource( creep )) {
                     creep.moveTo(constructionSite);
                 } else {
                     console.log(creep.name + " received rval = " + rv + " while trying to build " + constructionSite );
@@ -57,7 +69,9 @@ module.exports = {
                 return OK;
             } else {
                 console.log( creep.name + ' has no construction sites' + _.map(Game.constructionSites, (x) => x.pos.roomName).join(","))
-                return repairer.run( creep ); /// should be decision of master controller
+                if( !shouldNotRepair ) {
+                    return repairer.run( creep, true ); /// should be decision of master controller
+                }
             }
         } else {
             common.fillHerUp( creep );

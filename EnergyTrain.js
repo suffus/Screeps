@@ -9,68 +9,67 @@
 
 module.exports = {
     routes: {
-        'waywardChugger': {
-          route: [
-                {structure:'5bbb677229aba96c5ba3a620', action:'drain'},
-                {structure:'5bbb797b7293b00c84b491cc', action:'withdraw'},
-                {structure:'5bbb76453923961397f214b3', action:'withdraw'}],
-          when_full: 0,
-          route_type: 'circle',
-          min: 1,
-          max: 2,
-          priority: 50,
-          capacity: 1000
+        'ExtensionStoker' : {
+            min:1,
+            max:1,
+            route_type: 'line',
+            route: [
+                {structure:'5ee5e89572b57d36b39425c6', action:'deposit', skipIfEmpty: true}, /// store
+                {structure: '5ee10f883a9bf92e533fd2e2', action:'withdraw'}
+            ],
+            body: [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE]
         },
-        'barracksPuffer': { route:[
-                    {structure:'5ba22049cb444c51a999611b',action:'drain'}, // LINK
-                    {structure:'5bd9af41c37e352b7199f136',action:'withdraw'}, // CONTAINER W12S13
-                    {structure:'5bd9e5a5f18c322b9940245f',action:'withdraw'}
-                  ],
-                  route_type: 'circle',
-                  min: 2,
-                  max: 4,
-                  priority: 55,
-                  capacity: 1000
+        'SpawnSupply' : {
+            min:1,
+            max:1,
+            route_type: 'circle',
+            body:[CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
+            route:[
+                {structure: '5ee11f223659f6084f3bab7b', action:'withdraw', skipIfEmpty: true, skipIfFull: true},
+                {structure:'5ee5e89572b57d36b39425c6', action:'withdraw', skipIfEmpty: true, skipIfFull: true}, /// store
+                {structure: '5ee6d5a972b57d67f2949fc3', action:'drain'}
+            ]
         },
-        'controllerSupply': {
-          route:[{structure:'5ba7a7848a5aa7753406ebaf',action:'withdraw'},  //STORAGE
-                {structure:'5b97ea084fe61b156b29b1d6',action:'deposit'}, // TOWER
-                {structure:'5b994a6326ecb104baa0fdb6',action:'deposit'}], // CONTAINER]
+        'ThomasLinker': {
+          min:1,
+          max:1,
           route_type: 'line',
-          min: 1,
-          max: 1,
-          priority: 30
+          body:[MOVE,CARRY,CARRY],
+          route:[
+              {structure:'5ee5e89572b57d36b39425c6', action:'withdraw'},
+              {structure:'5ee836388e5ccb95635224fa', action:'drain'}
+              ]
         },
-        'bayCityRoller': {
-          route:[{structure:'5bbc737e7acddf6697ecacba',action:'withdraw'},
-                 {structure:'5bba9c2c869bf637939d0b62',action:'withdraw'},
-                 {structure:'5bbcfa7eba5e474357682275',action:'deposit'}],
-          route_type: 'circle',
-          min: 1,
-          max: 2,
-          priority: 30,
-          spawns: ['5bb90ff83f0d7d0acfa25762'],
-          size: 1300
+        'SlimJim': {
+            min: 1,
+            max: 1,
+            route_type: 'line',
+            body: [MOVE,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,CARRY,CARRY,MOVE],
+
+          route: [{structure:'5ee5e89572b57d36b39425c6',action:'deposit'},
+          {structure:'5ee4531940a8aa0b6f531321', action:'withdraw'}
+          ]
         },
-        'linker': {
-          route:[{structure:'5ba7a7848a5aa7753406ebaf',action:'deposit'},
-                 {structure:'5b9e98683b50fb23e20a6407',action:'withdraw'}],
-          route_type:'circle',
-          min: 1,
-          max: 1,
-          priority: 30,
-          spawns: ['5ba40623f3b35a19ddad4dca','5bc370925ec1822676bd93a3'],
-          size: 1100
+        'FatMax': {
+            min: 1,
+            max: 5,
+            route_type: 'line',
+            body: [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
+            route:[
+                {structure:'5ee5e89572b57d36b39425c6',action:'deposit'},
+                {structure: 'Flag3', action: 'flag'},
+                {structure:'572f11329335d17d5c820e66',action:'withdraw'}
+                ]
         }
     },
     type: 'energyTrain',
-    max: function() {return 4},
-    min: function() {return 4},
+    max: function() {return 2},
+    min: function() {return 1},
     min_energy: function() {
-        return 1600;
+        return 1000;
     },
     max_energy: function() {
-        return 1600;
+        return 1000;
     },
     createBody: function( eA ) {
         common=require('Common')
@@ -87,7 +86,7 @@ module.exports = {
             if( spec.size > 0 ) {
               energy = spec.size;
             }
-            let body = this.createBody( energy );
+            let body = spec.body || this.createBody( energy );
             let priority = spec['priority'] || 50;
             let job = 'energyTrain:' + route;
             rV[job] = {
@@ -111,7 +110,10 @@ module.exports = {
       return rV;
     },
 
-
+    getTargetObject: function( sS ) {
+        let rV = Game.getObjectById( sS ) || Game.flags[sS] || null
+        return rV
+    },
     run: function ( creep ) {
         if( creep.memory.nextStation == undefined ) {
             creep.memory.nextStation = 0;
@@ -121,6 +123,7 @@ module.exports = {
         if( creep.carry.energy == creep.carryCapacity && creep.memory.nextStation > 4 && creep.memory.direction == 1 ) {
             creep.memory.direction = -1;
             this.goNextStation( creep );
+
         }
         var route = this.route;
         if( creep.memory.route != undefined ) {
@@ -155,8 +158,9 @@ module.exports = {
             return;
         }
         structure = route[creep.memory.nextStation].structure;
-        if( structure.constructor == Array ) {
-            structures = _.filter(_.map( structure, (x) => Game.getObjectById(x) ), (z) => z != undefined );
+        let structures = []
+        if( structure !== undefined && structure.constructor == Array ) {
+            structures = _.filter(_.map( structure, (x) => this.getTargetObject(structure) ), (z) => z != undefined );
             if( structures.length == 0  ) {
                 this.goNextStation( creep );
                 return;
@@ -171,8 +175,8 @@ module.exports = {
             }
             structures = [structure];
         } else {
-            structures = [Game.getObjectById(structure)];
-            if( structures[0] == undefined ) {
+            structures = [this.getTargetObject(structure)];
+            if( structures[0] === null ) {
                 this.goNextStation( creep )
                 return
             }
@@ -218,6 +222,7 @@ module.exports = {
         }
 
         if( err != ERR_BUSY ) {
+            console.log("Going To Next Station")
             this.goNextStation( creep );
         } else {
             console.log( "EnergyTrain got " + err + " trying to " + action + " from/to " + structure )
@@ -226,9 +231,6 @@ module.exports = {
     },
 
     goNextStation: function( creep ) {
-        if( creep.memory.route == undefined || creep.memory.route == 'easternExpress') {
-          creep.memory.route = 'barracksPuffer';
-        }
         var route = this.routes[creep.memory.route].route;
         let rType = this.routes[creep.memory.route].route_type;
 
@@ -243,7 +245,7 @@ module.exports = {
               }
               creep.memory.nextStation += creep.memory.direction;
               s = route[creep.memory.nextStation].structure;
-              if( this.isStructureOK( s ) ) {
+              if( s !== undefined && this.isStructureOK( s, creep ) ) {
                 break;
               }
               n = n - 1;
@@ -258,7 +260,7 @@ module.exports = {
               creep.memory.nextStation = 0;
             }
             let s = route[creep.memory.nextStation];
-            if( this.isStructureOK( s ) ) {
+            if( this.isStructureOK( s, creep ) ) {
               break;
             }
             n = n - 1;
@@ -268,19 +270,30 @@ module.exports = {
         }
     },
 
-    isStructureOK: function( struct ) {
+    isStructureOK: function( struct, creep ) {
       if( Array.isArray( struct )) {
         for( let a of struct ) {
-          if( Game.getObjectById( a ) != undefined ) {
+          if( this.getTargetObject( a ) !== null ) {
             return true;
           }
         }
       } else {
-        if( Game.getObjectById( struct ) != undefined ) {
-          return true;
+        if( this.getTargetObject( struct ) !== null ) {
+            if( struct.skipIfEmpty ) {
+                if( this.getTargetObject.store[RESOURCE_ENERGY] === 0 ) {
+                    return false;
+                }
+            }
+            console.log("Check Skip Full "+creep.memory.route)
+            if( struct.skipIfFull ) {
+                console.log( "Asked to skip if full")
+                if( creep.store.getFreeCapacity( RESOURCE_ENERGY ) === 0  ) {
+                    return false
+                }
+            }
+            return true;
         }
       }
       return false;
     }
-
 };
