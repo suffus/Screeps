@@ -37,7 +37,7 @@ module.exports = {
             flag: 'Flag4',
             workforce: {
                 reserver: 1,
-                remoteHarvester: 1                
+                remoteHarvester: 0
             }
         },
         'E8S22' : {
@@ -94,7 +94,7 @@ module.exports = {
         if( tPos.pos ) {
           tPos = tPos.pos
         }
-        let distT = x => Math.max( Math.abs(x.x-tPos.x), Math.abs(x.y-tPos.y) )
+        let distT = x => Math.max( Math.abs(x.pos.x-tPos.x), Math.abs(x.pos.y-tPos.y) )
         let squares = Object.values( square ).sort( (x,y) => distT(x) - distT(y))
         for( let s of squares ) {
             if( s.structures.length === 0 && s.terrain === 0) {

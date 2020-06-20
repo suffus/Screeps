@@ -28,7 +28,7 @@ module.exports = {
             return [WORK,WORK,CARRY,MOVE]
         }
         if( eE <= 800 ) {
-            return [WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE]
+            return [WORK,WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE]
         }
         return [WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE]
     },
