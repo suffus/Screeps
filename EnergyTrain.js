@@ -52,7 +52,7 @@ module.exports = {
         },
         'Gerrard': {
           min:1,
-          max:1,
+          max:2,
           route_type: 'line',
           body: [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
           route: [

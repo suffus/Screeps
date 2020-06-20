@@ -79,7 +79,12 @@ module.exports = {
             if( target != undefined ) {
                 err = 0;
                 if( (err = creep.transfer( target, RESOURCE_ENERGY )) == ERR_NOT_IN_RANGE ) {
+                   if( creep.getRangeTo( target ) < 20 ) {}
                      creep.moveTo( target );
+                   } else {
+                     creep.drop(RESOURCE_ENERGY, 50)
+                     creep.memory.working = false
+                   }
                 } else if( err == 0 ) {
                     creep.memory.totalTransferred += creep.carry.energy;
                 } else {
@@ -88,7 +93,7 @@ module.exports = {
 
             } else {
                 if( creep.room.name != common.home ) {
-                    creep.moveTo( Game.flags.Flag1 );
+                    // creep.moveTo( Game.flags.Flag1 );
                 } else {
                     console.log("***ERR: No target for remote harvester creep to transfer energy to!  Shurley shome mishtake.  Don't all me 'Shirley'!");
                 }
