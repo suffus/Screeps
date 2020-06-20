@@ -66,7 +66,7 @@ module.exports = {
                     creep.moveTo(constructionSite);
                 } else {
                     console.log(creep.name + " received rval = " + rv + " while trying to build " + constructionSite );
-                    common.getOutOfTheWay( constructionSite )
+                    common.getOutOfTheWay( creep, constructionSite )
                 }
                 return OK;
             } else {
