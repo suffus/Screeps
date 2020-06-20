@@ -6,7 +6,7 @@
  * var mod = require('Claimer');
  * mod.thing == 'a thing'; // true
  */
-
+const common = require('Common')
 module.exports = {
     type: 'claimer',
     min: function() {return 0;},
@@ -43,7 +43,7 @@ module.exports = {
         }
 
         for( let rm in common.roomInfo ) {
-            if( common.roomInfo[rm].workforce.reserver !== undefined ) {
+            if( common.getWorkforce( rm, 'reserver') > 0 ) {
                 jobs['reserver:'+rm]= {
                     min:1,
                     max:1,
@@ -64,7 +64,6 @@ module.exports = {
     },
 
     run: function( creep ) {
-        common = require('Common');
         if( creep.memory.room !== undefined && creep.memory.room !== creep.pos.roomName) {
           creep.memory.targetFlag = common.roomInfo[creep.memory.room].flag;
         }

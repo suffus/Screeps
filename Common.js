@@ -61,6 +61,13 @@ module.exports = {
          return 0
      },
 
+     getFlag: function( rm ) {
+       if( this.roomInfo[rm] ) {
+         return rm.flag
+       }
+       return undefined
+     },
+
      findClearSquare: function( target, range ) {
         let square = this.getLocalData( target, range )
         for( let s of Object.values(square) ) {
