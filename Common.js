@@ -67,6 +67,23 @@ module.exports = {
        }
        return undefined
      },
+     clearParking: function( creep ) {
+       creep.memory.parkingPlace = undefined
+     },
+     getOutOfTheWay: function( creep, struct ) {
+       if( !creep.memory.parkingPlace ) {
+         if( struct === undefined ) {
+           struct = creep
+         }
+         let sq = this.findClearSquare( struct, 2 )
+         if( sq && creep.pos.getRangeTo( sq ) < 5 ) {
+           creep.memory.parkingPlace = sq
+         }
+       }
+       if( creep.memory.parkingPlace ) {
+         creep.moveTo( creep.memory.parkingPlace.x, creep.memory.parkingPlace.y )
+       }
+     },
 
      findClearSquare: function( target, range ) {
         let square = this.getLocalData( target, range )

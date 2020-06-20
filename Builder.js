@@ -46,6 +46,7 @@ module.exports = {
             if( (creep.memory.current_site == undefined) ||
                 (constructionSite = Game.getObjectById( creep.memory.current_site )) == undefined ||
                 ((Game.time % 7) == 6) ) {
+                    common.clearParking( creep )
                   let cS = _.map(Game.constructionSites, (x,y) => x);
                   let constructionSite = creep.pos.findClosestByPath( cS );
 
@@ -65,6 +66,7 @@ module.exports = {
                     creep.moveTo(constructionSite);
                 } else {
                     console.log(creep.name + " received rval = " + rv + " while trying to build " + constructionSite );
+                    common.getOutOfTheWay( constructionSite )
                 }
                 return OK;
             } else {
