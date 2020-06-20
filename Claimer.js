@@ -26,7 +26,7 @@ module.exports = {
 
     create_all_jobs: function() {
         let jobs = {};
-      if( Memory.claim != undefined ) {
+      if( Memory.claim ) {
         jobs['claimer'] = {
               min:1,
               max:1,
@@ -64,8 +64,12 @@ module.exports = {
     },
 
     run: function( creep ) {
+        if( !creep.memory.room ) {
+          console.log("***** MALFORMED CLAIMER COMMITTING SUICIDE *****")
+          creep.suicide()
+        }
         if( creep.memory.room !== undefined && creep.memory.room !== creep.pos.roomName) {
-          creep.memory.targetFlag = common.roomInfo[creep.memory.room].flag;
+          creep.memory.targetFlag = common.getFlag( creep.memory.room );
         }
         if( common.gotoFlag( creep ) < 0 ) {
           return ERR_NOT_IN_RANGE
