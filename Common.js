@@ -37,7 +37,7 @@ module.exports = {
             flag: 'Flag4',
             workforce: {
                 reserver: 1,
-                remoteHarvester: 0
+                remoteHarvester: 1
             }
         },
         'E8S22' : {

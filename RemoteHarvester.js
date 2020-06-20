@@ -79,7 +79,7 @@ module.exports = {
             if( target != undefined ) {
                 err = 0;
                 if( (err = creep.transfer( target, RESOURCE_ENERGY )) == ERR_NOT_IN_RANGE ) {
-                   if( creep.getRangeTo( target ) < 20 ) {}
+                   if( creep.getRangeTo( target ) < 20 ) {
                      creep.moveTo( target );
                    } else {
                      creep.drop(RESOURCE_ENERGY, 50)
