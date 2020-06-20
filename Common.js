@@ -67,15 +67,17 @@ module.exports = {
        }
        return undefined
      },
+     
      clearParking: function( creep ) {
        creep.memory.parkingPlace = undefined
      },
+
      getOutOfTheWay: function( creep, struct ) {
        if( !creep.memory.parkingPlace ) {
          if( struct === undefined ) {
            struct = creep
          }
-         let sq = this.findClearSquare( struct, 2 )
+         let sq = this.findClearSquare( struct, 2, creep )
          if( sq && creep.pos.getRangeTo( sq ) < 5 ) {
            creep.memory.parkingPlace = sq
          }
@@ -85,9 +87,15 @@ module.exports = {
        }
      },
 
-     findClearSquare: function( target, range ) {
+     findClearSquare: function( target, range, start ) {
         let square = this.getLocalData( target, range )
-        for( let s of Object.values(square) ) {
+        let tPos = start || target
+        if( tPos.pos ) {
+          tPos = tPos.pos
+        }
+        let distT = x => Math.max( Math.abs(x.x-tPos.x), Math.abs(x.y-tPos.y) )
+        let squares = Object.values( square ).sort( (x,y) => distT(x) - distT(y))
+        for( let s of squares ) {
             if( s.structures.length === 0 && s.terrain === 0) {
                 return s.pos
             }
@@ -175,7 +183,7 @@ module.exports = {
         'work':100,'carry':50,'move':50,'attack':80,'ranged_attack':150,'tough':10,'heal':250,'claim':600
     },
 
-    isBlockingSource( creep ) {
+    isBlockingSource: function( creep ) {
           sources = Game.rooms[creep.pos.roomName].find( FIND_SOURCES )
           for( let s of sources ) {
               if( creep.pos.getRangeTo( s ) === 1   ) {
@@ -186,7 +194,7 @@ module.exports = {
           return false
     },
 
-    findRoomEnergySource( roomName ) {
+    findRoomEnergySource: function( roomName ) {
         sources = Game.rooms[roomName].find(FIND_SOURCES);
         let rnd = Math.floor(Math.random() * sources.length)
         if( sources.length === 0  ) {
@@ -457,6 +465,7 @@ module.exports = {
         if( source !=undefined ) {
             //console.log( creep.name + " going to source " + source.pos.x + " " + source.pos.y);
             var err = 99;
+            this.clearParking( creep )
             if( source == source_source ) {
                 err = creep.harvest( source );
             } else if( source == source_container || source == source_tombstone || source == source_storage || source == source_link ) {
@@ -485,9 +494,11 @@ module.exports = {
             //console.log("No sources for "+creep.name);
             source = Game.getObjectById( creep.memory.allocatedSource || creep.memory.sourceTarget );
             if( source != undefined ) {
+                common.clearParking( creep )
                 creep.moveTo( source );
                 return ERR_NOT_IN_RANGE;
             } else {
+                common.getOutOfTheWay( creep )
                 return ERR_NOT_ENOUGH_RESOURCES;
             }
         }
