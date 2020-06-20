@@ -16,7 +16,7 @@ module.exports = {
             defenceStrategy:'soldier',
             workforce: {
                 harvester : 2,
-                upgrader: 3,
+                upgrader: 2,
                 builder: 2,
                 repairer: 1,
                 brickie: 1
@@ -33,6 +33,12 @@ module.exports = {
             }
 
         },
+        'E7S22': {
+            flag: 'Flag4',
+            workforce: {
+                builder: 1
+            }
+        },
         'E8S22' : {
             flag: 'Flag2',
             workforce: {
@@ -41,14 +47,24 @@ module.exports = {
             }
         },
         'E8S23' : {
-            flag: 'Flag3'
+            flag: 'Flag3',
+            lootable: true
         }
+     },
+
+     getWorkforce: function( room, worker ) {
+         if( this.roomInfo[room] ) {
+             if( this.roomInfo[room].workforce ) {
+                 return this.roomInfo[room].workforce[worker]
+             }
+         }
+         return 0
      },
 
      findClearSquare: function( target, range ) {
         let square = this.getLocalData( target, range )
         for( let s of Object.values(square) ) {
-            if( s.structures.length === 0 && (s.terrain & (TERRAIN_MASK_LAVA|TERRAIN_MASK_WALL|TERRAIN_MASK_SWAMP)) == 0) {
+            if( s.structures.length === 0 && s.terrain === 0) {
                 return s.pos
             }
         }
@@ -62,13 +78,13 @@ module.exports = {
          const terrain = new Room.Terrain( pos.roomName );
          let rV = {}
          for( let i = -delta; i<=delta; i++ ) {
-             for( let j = -delta; j<delta; j++ ) {
-                 if( i+delta >= 1 && i+delta <=48 && j+delta >= 1 && j+delta <= 48 ) {
-                     let terra = terrain.get(i+delta,j+delta)
-                     let pPos = new RoomPosition( i+delta, j+delta, pos.roomName )
+             for( let j = -delta; j<=delta; j++ ) {
+                 if( i+pos.x >= 1 && i+pos.x <=48 && j+pos.y >= 1 && j+pos.y <= 48 ) {
+                     let terra = terrain.get(i+pos.x,j+pos.y)
+                     let pPos = new RoomPosition( i+pos.x, j+pos.y, pos.roomName )
                      let point = {
                          pos: pPos,
-                         terrain: terrain.get( i+delta, j+delta ),
+                         terrain: terra,
                          structures: this.findStruct( pPos )
                      }
                      rV[pPos] = point
@@ -90,11 +106,13 @@ module.exports = {
      },
 
     findStruct: function( pos ) {
-        let sA = Memory.rooms[pos.roomName]
+        let sA = Memory.rooms[pos.roomName].structures
         if( sA !== undefined && sA.length > 0 ) {
             if( this.comparePos(sA[0].pos, pos ) > 0 ) {
+
                 return []
             }
+
             let lo = 0
             let hi = sA.length-1
             let dP = 0
@@ -110,7 +128,7 @@ module.exports = {
 
             let rV = []
             while( lo < sA.length && this.comparePos( sA[lo].pos, pos ) === 0 ) {
-                rV.push( sA[lo].structure )
+                rV.push( sA[lo].id )
                 lo++
             }
             return rV
@@ -430,7 +448,7 @@ module.exports = {
             } else if( err == ERR_NOT_IN_RANGE ) {
                 creep.moveTo( source );
             } else {
-                console.log("****LOG - energy acquisition call returned "+err+" for " + creep + " ("+creep.pos+") " + " for "+source+" ("+source.pos+")");
+                //console.log("****LOG - energy acquisition call returned "+err+" for " + creep + " ("+creep.pos+") " + " for "+source+" ("+source.pos+")");
                 creep.moveTo( Game.flags.Flag1)
                 creep.memory.sourceTarget = undefined
             }
@@ -440,7 +458,7 @@ module.exports = {
             return err;
            //console.log( "err1=" + err1 + ", err2="+err2);
         } else {
-            console.log("No sources for "+creep.name);
+            //console.log("No sources for "+creep.name);
             source = Game.getObjectById( creep.memory.allocatedSource || creep.memory.sourceTarget );
             if( source != undefined ) {
                 creep.moveTo( source );

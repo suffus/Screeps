@@ -89,7 +89,7 @@ module.exports = {
                 // the second argument for findClosestByPath is an object which takes
                 // a property called filter which can be a function
                 // we use the arrow operator to define it
-                    filter: (s) => s.hits < s.hitsMax && s.structureType != STRUCTURE_WALL && s.structureType != STRUCTURE_RAMPART && Memory.deprecatedStructures[s.id] == undefined
+                    filter: (s) => s.hits < s.hitsMax-300 && s.structureType != STRUCTURE_WALL && s.structureType != STRUCTURE_RAMPART && Memory.deprecatedStructures[s.id] == undefined
                 });
             }
 
@@ -98,19 +98,20 @@ module.exports = {
                 creep.memory.currentTarget = structure.id
                 // try to repair it, if it is out of range
                 let err
-                if ((err = creep.repair(structure)) == ERR_NOT_IN_RANGE) {
+
+                //console.log(creep.name + " looking to repair structure " + structure + " at " + structure.pos + " with " + structure.hits + " hits out of " + structure.hitsMax)
+                if ((err = creep.repair(structure)) === ERR_NOT_IN_RANGE) {
                     // move towards it
                     creep.memory.firstOK = false
                     creep.moveTo(structure);
-                    console.log(creep.name + " looking to repair structure " + structure + " at " + structure.pos)
                 } else {
                     if( err == OK && !creep.memory.firstOK ) {
                         creep.memory.firstOK = true
                         let pos = common.findClearSquare( structure, 1 )
                         creep.memory.repairFrom = pos || creep.pos
                     }
-                    if( creep.pos.getRangeTo( creep.memory.repairFrom ) > 0 ) {
-                        creep.moveTo( pos )
+                    if( creep.memory.repairFrom !== undefined && !creep.pos.isEqualTo(creep.memory.repairFrom) ) {
+                        creep.moveTo( creep.memory.repairFrom.x, creep.memory.repairFrom.y )
                     }
                     if( structure.hitsMax - structure.hits === 0 ) {
                         creep.memory.currentTarget = undefined
@@ -125,6 +126,7 @@ module.exports = {
         }
             // if creep is supposed to get energy
         else {
+            creep.memory.firstOK=false
             common.fillHerUp( creep );
         }
     }

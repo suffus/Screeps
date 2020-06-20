@@ -17,13 +17,13 @@ module.exports = {
                 {structure:'5ee5e89572b57d36b39425c6', action:'deposit', skipIfEmpty: true}, /// store
                 {structure: '5ee10f883a9bf92e533fd2e2', action:'withdraw'}
             ],
-            body: [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE]
+            body: [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE]
         },
         'SpawnSupply' : {
             min:1,
             max:1,
             route_type: 'circle',
-            body:[CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
+            body:[CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
             route:[
                 {structure: '5ee11f223659f6084f3bab7b', action:'withdraw', skipIfEmpty: true, skipIfFull: true},
                 {structure:'5ee5e89572b57d36b39425c6', action:'withdraw', skipIfEmpty: true, skipIfFull: true}, /// store
@@ -41,24 +41,24 @@ module.exports = {
               ]
         },
         'SlimJim': {
-            min: 1,
-            max: 1,
+            min: 2,
+            max: 2,
             route_type: 'line',
-            body: [MOVE,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,CARRY,CARRY,MOVE],
+            body: [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
 
           route: [{structure:'5ee5e89572b57d36b39425c6',action:'deposit'},
           {structure:'5ee4531940a8aa0b6f531321', action:'withdraw'}
           ]
         },
         'FatMax': {
-            min: 1,
-            max: 5,
+            min: 0,
+            max: 0,
             route_type: 'line',
             body: [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
             route:[
                 {structure:'5ee5e89572b57d36b39425c6',action:'deposit'},
-                {structure: 'Flag3', action: 'flag'},
-                {structure:'572f11329335d17d5c820e66',action:'withdraw'}
+                {structure: 'Flag3', action: 'loot'},
+                {structure:'57373a8daa5ccdfe7f6c0192',action:'withdraw'}
                 ]
         }
     },
@@ -134,6 +134,11 @@ module.exports = {
           }
         }
         // First find nearby tombstones etc
+        let source_loot
+        if( common.roomInfo[creep.pos] && common.roomInfo[creep.pos].lootable ) {
+            source_loot = creep.pos.findClosestByPath( FIND_STRUCTURES, {
+                    filter: (r) => r.store[RESOURCE_ENERGY]>0})
+        }
         source_dropped = creep.pos.findClosestByPath( FIND_DROPPED_RESOURCES, {
             filter: (r) => r.resourceType == RESOURCE_ENERGY && creep.pos.getRangeTo( r ) <= 5
         } );
@@ -147,9 +152,17 @@ module.exports = {
             }
             return;
         }
+
         if( source_tombstone != undefined && creep.carry.energy < creep.carryCapacity ) {
             if( creep.withdraw( source_tombstone, RESOURCE_ENERGY ) == ERR_NOT_IN_RANGE ){
                 creep.moveTo( source_tombstone );
+            }
+            return;
+        }
+        if( source_loot != undefined && creep.carry.energy < creep.carryCapacity ) {
+            console.log("Energy Train Found Loot")
+            if( creep.withdraw( source_loot, RESOURCE_ENERGY ) === ERR_NOT_IN_RANGE ){
+                creep.moveTo( source_loot );
             }
             return;
         }

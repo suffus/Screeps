@@ -40,23 +40,27 @@ module.exports = {
         if( room.controller.my ) {
             let job_nm = this.type + ":" + roomName;
             max = common.getWorkforce( roomName, 'upgrader' );
+            if( max > 0 ) {
 
-            job = {
-                job: job_nm,
-                role: this.type,
-                min: 1,
-                max: max,
-                priority: 10,
-                options: {
-                    controller: room.controller.id,
-                    heavyVehicle: true,  //// changes behaviour at fillHerUp()
-                    working: false
-                },
-                bodySmall: [WORK,WORK,CARRY,MOVE],
-                body: this.createBody(1100),
-                bodyLarge: [WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE]
-            };
-            jobs[ job.job ] = job;
+
+
+                job = {
+                    job: job_nm,
+                    role: this.type,
+                    min: 1,
+                    max: max,
+                    priority: 10,
+                    options: {
+                        controller: room.controller.id,
+                        heavyVehicle: true,  //// changes behaviour at fillHerUp()
+                        working: false
+                    },
+                    bodySmall: [WORK,WORK,CARRY,MOVE],
+                    body: this.createBody(1100),
+                    bodyLarge: [WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE]
+                };
+                jobs[ job.job ] = job;
+            }
         }
         return jobs;
     },
