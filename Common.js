@@ -36,7 +36,8 @@ module.exports = {
         'E7S22': {
             flag: 'Flag4',
             workforce: {
-                builder: 1
+                reserver: 1,
+                remoteHarvester: 1                
             }
         },
         'E8S22' : {
@@ -67,7 +68,7 @@ module.exports = {
        }
        return undefined
      },
-     
+
      clearParking: function( creep ) {
        creep.memory.parkingPlace = undefined
      },

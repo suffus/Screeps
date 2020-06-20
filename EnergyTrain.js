@@ -50,6 +50,16 @@ module.exports = {
           {structure:'5ee4531940a8aa0b6f531321', action:'withdraw'}
           ]
         },
+        'Gerrard': {
+          min:1,
+          max:1,
+          route_type: 'line',
+          body: [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
+          route: [
+            {structure:'5ee5e89572b57d36b39425c6',action:'deposit'},
+            {structure:'5eed8ea43fdd055a1d5bf491', action:'withdraw'}
+          ]
+        },
         'FatMax': {
             min: 0,
             max: 0,
