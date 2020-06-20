@@ -129,6 +129,9 @@ module.exports = {
         for( let rm in common.roomInfo ) {
             let room = common.roomInfo
             let cR = Game.rooms[rm]
+            if( !cR ) {
+              continue
+            }
             let cS = cR.find(FIND_MY_CONSTRUCTION_SITES)
             let sS = cR.find(FIND_MY_STRUCTURES, {filter: (x) => x.structureType !== STRUCTURE_RAMPART})
             let roads = cR.find( FIND_STRUCTURES, {filter: (x) => x.structureType === STRUCTURE_ROAD} )
